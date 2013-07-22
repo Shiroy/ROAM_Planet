@@ -33,9 +33,9 @@ public:
 	void render(Ogre::ManualObject *obj);
 
 	void split(float radius);
-	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated);
+	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 
-	void mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated);
+	void mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 	void merge();
 
 	float variance(float exactRadius);

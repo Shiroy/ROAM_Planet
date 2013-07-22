@@ -51,5 +51,8 @@ private:
 
 	bool updateKeyPressed;
 	bool stopUpdate;
+
+	int lastfpstick;
+	int currenttick;
 };
 

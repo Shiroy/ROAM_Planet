@@ -16,6 +16,9 @@ Demarage::Demarage(void)
 
 	updateKeyPressed = false;
 	stopUpdate = false;
+
+	lastfpstick = 0;
+	currenttick = 0;
 }
 
 
@@ -106,9 +109,16 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 
 	m_keyboard->capture();
 	m_mouse->capture();
+
+	currenttick = GetTickCount();
+	if((currenttick - lastfpstick) > 1000)
+	{
+		std::cout << "FPS : " << m_window->getAverageFPS() << std::endl;
+		lastfpstick = currenttick;
+	}
 	
 	if(!stopUpdate)
-		m_planet->updateMesh(m_camera->getPosition());
+		m_planet->updateMesh(m_camera->getPosition(), m_camera);
 
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;

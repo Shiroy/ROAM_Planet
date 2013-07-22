@@ -1,5 +1,6 @@
 #include "Triangle.h"
 #include <OGRE\OgreManualObject.h>
+#include <OGRE\OgreCamera.h>
 
 Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p)
 {
@@ -207,7 +208,7 @@ void Triangle::merge()
 	{
 		if(enfant1->voisin[1]->voisin[i] == enfant1)
 		{
-			enfant1->voisin[1]->voisin[i] == enfant1->parent;
+			enfant1->voisin[1]->voisin[i] == parent;
 			parent->voisin[0] = enfant1->voisin[1];
 		}
 	}
@@ -216,7 +217,7 @@ void Triangle::merge()
 	{
 		if(enfant2->voisin[1]->voisin[i] == enfant2)
 		{
-			enfant2->voisin[1]->voisin[i] == enfant2->parent;
+			enfant2->voisin[1]->voisin[i] == parent;
 			parent->voisin[2] = enfant2->voisin[1];
 		}
 	}
@@ -225,7 +226,7 @@ void Triangle::merge()
 	{
 		if(enfantV1->voisin[1]->voisin[i] == enfantV1)
 		{
-			enfantV1->voisin[1]->voisin[i] == enfantV1->parent;
+			enfantV1->voisin[1]->voisin[i] == parentVoisin;
 			parentVoisin->voisin[0] = enfantV1->voisin[1];
 		}
 	}
@@ -234,7 +235,7 @@ void Triangle::merge()
 	{
 		if(enfantV2->voisin[1]->voisin[i] == enfantV2)
 		{
-			enfantV2->voisin[1]->voisin[i] == enfantV2->parent;
+			enfantV2->voisin[1]->voisin[i] == parentVoisin;
 			parentVoisin->voisin[2] = enfantV2->voisin[1];
 		}
 	}
@@ -264,14 +265,14 @@ float Triangle::variance(float exactRadius)
 	return abs(normeSQMilieu - squaredRadius);
 }
 
-void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated)
+void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
 {
 	if(enfant[0] || enfant[1])
 	{
 		if(enfant[0])
-			enfant[0]->splitIfNeeded(dPos, radius, meshUpdated);
+			enfant[0]->splitIfNeeded(dPos, radius, meshUpdated, m_cam);
 		if(enfant[1])
-			enfant[1]->splitIfNeeded(dPos, radius, meshUpdated);
+			enfant[1]->splitIfNeeded(dPos, radius, meshUpdated, m_cam);
 	}
 	else
 	{
@@ -282,12 +283,14 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) < 0)
 			return;
 
+		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
+			return; //Le triangle n'est pas du tout visible
 
 		float ratio = var / dPos.squaredLength();
 
 		//std::cout << "Ratio: " << ratio << std::endl;
 
-		if(ratio > 0.0001f)
+		if(ratio > 0.0001f && ((ratio - 0.0001f) / 0.0001) > 0.10f)
 		{
 			split(radius);
 			meshUpdated = true;
@@ -295,14 +298,14 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 }
 
-void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated)
+void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
 {
 	if(enfant[0] || enfant[1])
 	{
 		if(enfant[0])
-			enfant[0]->mergeIfNeeded(dPos, radius, meshUpdated);
+			enfant[0]->mergeIfNeeded(dPos, radius, meshUpdated, m_cam);
 		if(enfant[1] && !meshUpdated)
-			enfant[1]->mergeIfNeeded(dPos, radius, meshUpdated);
+			enfant[1]->mergeIfNeeded(dPos, radius, meshUpdated, m_cam);
 	}
 	else
 	{
@@ -313,15 +316,21 @@ void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) < 0)
 			return;
 
-
 		float ratio = var / dPos.squaredLength();
 
 		//std::cout << "Ratio: " << ratio << std::endl;
 
-		if(ratio < 0.0001f)
+		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
 		{
 			merge();
 			meshUpdated = true;
+			return;
 		}
+
+		if(ratio < 0.0001f && ((ratio - 0.0001f) / 0.0001) > 0.10f)
+		{
+			merge();
+			meshUpdated = true;
+		}		
 	}
 }

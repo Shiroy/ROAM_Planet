@@ -16,7 +16,7 @@ public:
 	Sphere(float radius, Ogre::ManualObject *obj);
 	~Sphere(void);
 
-	void updateMesh(Ogre::Vector3 dPos); //dPos vecteur position entre le cente de la camera et le mesh
+	void updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam); //dPos vecteur position entre le cente de la camera et le mesh
 	void render(Ogre::ManualObject *obj);
 
 	Triangle* getRootTriangle(int tri) {return rootTriangle[tri];}
