@@ -17,7 +17,7 @@ public:
 	~Sphere(void);
 
 	void updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam); //dPos vecteur position entre le cente de la camera et le mesh
-	void render(Ogre::ManualObject *obj);
+	void render(Ogre::ManualObject *obj, int &nbTri, int &recurseLevel);
 
 	Triangle* getRootTriangle(int tri) {return rootTriangle[tri];}
 

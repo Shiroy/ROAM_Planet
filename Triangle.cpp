@@ -79,12 +79,13 @@ Triangle* Triangle::getParent()
 	return parent;
 }
 
-void Triangle::render(Ogre::ManualObject *obj)
+void Triangle::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
 	if(enfant[0] || enfant[1])
 	{
-		enfant[0]->render(obj);
-		enfant[1]->render(obj);
+		nbRecurse++;
+		enfant[0]->render(obj, nbTri, nbRecurse);
+		enfant[1]->render(obj, nbTri, nbRecurse);
 	}
 	else
 	{
@@ -94,6 +95,7 @@ void Triangle::render(Ogre::ManualObject *obj)
 		obj->normal(v[1].nx, v[1].ny, v[1].nz);
 		obj->position(v[2].x, v[2].y, v[2].z);
 		obj->normal(v[2].nx, v[2].ny, v[2].nz);
+		nbTri++;
 	}
 }
 
@@ -311,10 +313,7 @@ void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	{
 		float var = variance(radius);
 		if(!var) //No update needed
-			return;
-
-		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) < 0)
-			return;
+			return;		
 
 		float ratio = var / dPos.squaredLength();
 

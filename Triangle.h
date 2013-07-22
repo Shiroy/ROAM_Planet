@@ -30,7 +30,7 @@ public:
 
 	Triangle* getParent();
 
-	void render(Ogre::ManualObject *obj);
+	void render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse);
 
 	void split(float radius);
 	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);

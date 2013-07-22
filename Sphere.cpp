@@ -90,20 +90,69 @@ Sphere::~Sphere(void)
 		delete rootTriangle[i];
 }
 
-void Sphere::render(Ogre::ManualObject *obj)
+void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
-	rootTriangle[0]->render(obj);
-	rootTriangle[1]->render(obj);
-	rootTriangle[2]->render(obj);
-	rootTriangle[3]->render(obj);
-	rootTriangle[4]->render(obj);
-	rootTriangle[5]->render(obj);
-	rootTriangle[6]->render(obj);
-	rootTriangle[7]->render(obj);
-	rootTriangle[8]->render(obj);
-	rootTriangle[9]->render(obj);
-	rootTriangle[10]->render(obj);
-	rootTriangle[11]->render(obj);
+	int recurse = 1;	
+
+	rootTriangle[0]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[1]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[2]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[3]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[4]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[5]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[6]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[7]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[8]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[9]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[10]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
+
+	rootTriangle[11]->render(obj, nbTri, recurse);
+	if(recurse > nbRecurse)
+		nbRecurse = recurse;
+	recurse = 1;
 }
 
 void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
@@ -112,14 +161,18 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
-	for(int i = 0 ; i < 12 ; i++)
-		rootTriangle[i]->mergeIfNeeded(dPos, m_radius, meshUpdated, m_cam);
+	/*for(int i = 0 ; i < 12 ; i++)
+		rootTriangle[i]->mergeIfNeeded(dPos, m_radius, meshUpdated, m_cam);*/
 
 	if(meshUpdated)
 	{
+		int nbTri = 0;
+		int recurseLevel = 1;
 		m_obj->clear();
 		m_obj->begin("BasicWhite", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-		render(m_obj);
+		render(m_obj, nbTri, recurseLevel);
 		m_obj->end();
+
+		std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
 	}
 }
