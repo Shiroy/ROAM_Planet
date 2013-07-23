@@ -261,7 +261,7 @@ void Triangle::merge()
 	delete enfantV2;
 }
 
-float Triangle::variance(Ogre::Vector3 dPos, float exactRadius)
+float Triangle::variance(Ogre::Vector3 dPos, float exactRadius, Ogre::Camera *m_cam)
 {
 	float squaredRadius = exactRadius * exactRadius;
 
@@ -276,14 +276,14 @@ float Triangle::variance(Ogre::Vector3 dPos, float exactRadius)
 	milieu.y = (v[2].y + v[0].y) / 2;
 	milieu.z = (v[2].z + v[0].z) / 2;
 
-	dPos = milieu - dPos;
+	Ogre::Vector3 vecDir = milieu - m_cam->getPosition();
 
 	Ogre::Vector3 edge;
 	edge.x = v[2].x - v[0].x;
 	edge.y = v[2].y - v[0].y;
 	edge.z = v[2].z - v[0].z;
 
-	return edge.length() / dPos.length();
+	return edge.length() / vecDir.length();
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
@@ -297,7 +297,7 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-		float var = variance(dPos, radius);
+		float var = variance(dPos, radius, m_cam);
 		if(!var) //No update needed
 			return;
 
@@ -330,7 +330,7 @@ void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-		float ratio = variance(dPos, radius);
+		//float ratio = variance(dPos, radius);
 		
 		//std::cout << "Ratio: " << ratio << std::endl;
 
