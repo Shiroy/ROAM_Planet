@@ -111,14 +111,16 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	m_mouse->capture();
 
 	currenttick = GetTickCount();
-	if((currenttick - lastfpstick) > 1000)
+	/*if((currenttick - lastfpstick) > 1000)
 	{
 		std::cout << "FPS : " << m_window->getAverageFPS() << std::endl;
 		lastfpstick = currenttick;
-	}
+	}*/
 	
 	if(!stopUpdate)
-		m_planet->updateMesh(m_camera->getPosition(), m_camera);
+		m_planet->updateMesh(m_node->getPosition() - m_camera->getPosition(), m_camera);
+
+	std::cout << "Distance : " <<(m_camera->getPosition() - m_node->getPosition()).length() << " (update : " << (stopUpdate == true ? "off" : "on") << ")" << std::endl;
 
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
@@ -137,6 +139,8 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 		deplacement.x -= mouvement;
 	if(m_keyboard->isKeyDown(OIS::KC_D))
 		deplacement.x += mouvement;
+
+	
 
 	if(m_keyboard->isKeyDown(OIS::KC_U) && !updateKeyPressed)
 	{

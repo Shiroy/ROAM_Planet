@@ -195,14 +195,17 @@ void Triangle::split(float radius)
 
 void Triangle::merge()
 {
-	if(!parent) //Root triangle can't be merged
+	//std::cout << "Call merge" << std::endl;
+	/*if(!parent) //Root triangle can't be merged
 		return;
 
 	if(enfant[1] || enfant[0])
-		return;
+		return;*/
 
 	if(voisin[0]->voisin[0]->voisin[0]->voisin[0] != this)
 		return;
+
+	//std::cout << "Merging triangles" << std::endl;
 
 	Triangle *parentVoisin = parent->voisin[1];
 
@@ -258,18 +261,22 @@ void Triangle::merge()
 	delete enfantV2;
 }
 
-float Triangle::variance(float exactRadius)
+float Triangle::variance(Ogre::Vector3 dPos, float exactRadius)
 {
 	float squaredRadius = exactRadius * exactRadius;
 
-	Vertex milieu;
-	milieu.x = (v[2].x + v[0].x) / 2;
-	milieu.y = (v[2].y + v[0].y) / 2;
-	milieu.z = (v[2].z + v[0].z) / 2;
+	Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
+	Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
 
-	float normeSQMilieu = milieu.x*milieu.x + milieu.y*milieu.y + milieu.z*milieu.z;
+	Ogre::Vector3 normal = v1.crossProduct(v2);
+	normal.normalise();	
 
-	return abs(normeSQMilieu - squaredRadius);
+	Ogre::Vector3 milieu;
+	milieu.x = v[2].x - v[0].x;
+	milieu.y = v[2].y - v[0].y;
+	milieu.z = v[2].z - v[0].z;
+
+	return milieu.length() / dPos.length();
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
@@ -283,21 +290,21 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-		float var = variance(radius);
+		float var = variance(dPos, radius);
 		if(!var) //No update needed
 			return;
 
-		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) < 0)
+		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) > 0)
 			return;
 
 		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
 			return; //Le triangle n'est pas du tout visible
 
-		float ratio = var / dPos.squaredLength();
+		float ratio = var;
 
 		//std::cout << "Ratio: " << ratio << std::endl;
 
-		if(ratio > 0.0001f && ((ratio - 0.0001f) / 0.0001) > 0.10f)
+		if(ratio > 0.01f)
 		{
 			split(radius);
 			meshUpdated = true;
@@ -316,25 +323,47 @@ void Triangle::mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-		float var = variance(radius);
-		if(!var) //No update needed
-			return;		
-
-		float ratio = var / dPos.squaredLength();
-
+		float ratio = variance(dPos, radius);
+		
 		//std::cout << "Ratio: " << ratio << std::endl;
 
-		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
+		/*if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
 		{
 			merge();
 			meshUpdated = true;
 			return;
 		}
 
-		if(ratio < 0.0001f && ((ratio - 0.0001f) / 0.0001) > 0.10f)
+		if(ratio < 0.0001f && (abs(ratio - 0.0001f) / 0.0001) > 0.10f)
 		{
 			merge();
 			meshUpdated = true;
-		}		
+		}*/		
 	}
+}
+
+float Triangle::error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius)
+{
+	float distance = dPos.squaredDistance(Ogre::Vector3::ZERO);
+
+	Ogre::Vector3 milieu;
+	milieu.x = (v[2].x + v[0].x) / 2;
+	milieu.y = (v[2].y + v[0].y) / 2;
+	milieu.z = (v[2].z + v[0].z) / 2;
+
+	float fov = m_cam->getDirection().dotProduct((milieu - dPos).normalisedCopy());
+
+	float edge_lenght = v[2].x * v[0].x + v[2].y * v[0].y + v[2].z * v[0].z;
+	float altitude = dPos.length() - radius;
+	if(altitude < 1.0f)
+		altitude = 1.0f;
+
+	float horizon = altitude * altitude + 2.0f * altitude * radius;
+
+	float error = 0.0f;
+
+	//if(distance < edge_lenght || (distance < horizon && fov > (1 - m_cam->getFOVy().valueRadians()))
+
+	return 0.0f;
+
 }

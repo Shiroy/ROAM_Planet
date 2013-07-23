@@ -161,8 +161,8 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
-	/*for(int i = 0 ; i < 12 ; i++)
-		rootTriangle[i]->mergeIfNeeded(dPos, m_radius, meshUpdated, m_cam);*/
+	for(int i = 0 ; i < 12 ; i++)
+		rootTriangle[i]->mergeIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
 	if(meshUpdated)
 	{

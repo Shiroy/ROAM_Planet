@@ -38,7 +38,9 @@ public:
 	void mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 	void merge();
 
-	float variance(float exactRadius);
+	float variance(Ogre::Vector3 dPos, float exactRadius);
+
+	float error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius);
 
 private:	
 
