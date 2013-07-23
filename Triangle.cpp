@@ -283,7 +283,7 @@ float Triangle::variance(Ogre::Vector3 dPos, float exactRadius, Ogre::Camera *m_
 	edge.y = v[2].y - v[0].y;
 	edge.z = v[2].z - v[0].z;
 
-	return edge.length() / vecDir.length();
+	return edge.squaredLength() / vecDir.squaredLength();
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
@@ -311,7 +311,7 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 
 		//std::cout << "Ratio: " << ratio << std::endl;
 
-		if(ratio > 0.1f)
+		if(ratio > 0.001f)
 		{
 			split(radius);
 			meshUpdated = true;
