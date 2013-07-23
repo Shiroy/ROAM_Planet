@@ -79,13 +79,17 @@ Triangle* Triangle::getParent()
 	return parent;
 }
 
-void Triangle::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
+int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
 {
 	if(enfant[0] || enfant[1])
-	{
-		nbRecurse++;
-		enfant[0]->render(obj, nbTri, nbRecurse);
-		enfant[1]->render(obj, nbTri, nbRecurse);
+	{		
+		int r1 = enfant[0]->render(obj, nbTri, nbRecurse+1);
+		int r2 = enfant[1]->render(obj, nbTri, nbRecurse+1);
+
+		if(r1 > r2)
+			return r1;
+		else
+			return r2;
 	}
 	else
 	{
@@ -96,6 +100,7 @@ void Triangle::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 		obj->position(v[2].x, v[2].y, v[2].z);
 		obj->normal(v[2].nx, v[2].ny, v[2].nz);
 		nbTri++;
+		return nbRecurse;
 	}
 }
 

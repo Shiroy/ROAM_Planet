@@ -94,62 +94,62 @@ void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
 	int recurse = 1;	
 
-	rootTriangle[0]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[0]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[1]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[1]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[2]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[2]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[3]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[3]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[4]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[4]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[5]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[5]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[6]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[6]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[7]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[7]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[8]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[8]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[9]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[9]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[10]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[10]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
 
-	rootTriangle[11]->render(obj, nbTri, recurse);
+	recurse = rootTriangle[11]->render(obj, nbTri, recurse);
 	if(recurse > nbRecurse)
 		nbRecurse = recurse;
 	recurse = 1;
