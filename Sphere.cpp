@@ -7,23 +7,23 @@
 Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
 {	
 	m_obj = obj;
-	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL); //DCB (dessous)
-	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL); //BAD
+	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, &m_diamondList); //DCB (dessous)
+	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, &m_diamondList); //BAD
 
-	rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL); //ABF (face avant)
-	rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL); //FEA
+	rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL, &m_diamondList); //ABF (face avant)
+	rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL, &m_diamondList); //FEA
 
-	rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL); //BCG (cote gauche)
-	rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL); //GFB
+	rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL, &m_diamondList); //BCG (cote gauche)
+	rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL, &m_diamondList); //GFB
 
-	rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL); //CDH (face arriere)
-	rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL); //HGC
+	rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL, &m_diamondList); //CDH (face arriere)
+	rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL, &m_diamondList); //HGC
 
-	rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL); //DAE (cote droit)
-	rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL); //EHD
+	rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL, &m_diamondList); //DAE (cote droit)
+	rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL, &m_diamondList); //EHD
 
-	rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL); //EFG (haut)
-	rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL); //GHE
+	rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL, &m_diamondList); //EFG (haut)
+	rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL, &m_diamondList); //GHE
 
 	//Initialisation des voisin
 
@@ -105,8 +105,14 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
-	for(int i = 0 ; i < 12 ; i++)
-		rootTriangle[i]->mergeIfNeeded(dPos, m_radius, meshUpdated, m_cam);
+	for(std::list<Diamond*>::const_iterator i = m_diamondList.begin() ; i != m_diamondList.end() ; ++i)
+	{
+		Diamond *dia = *i;
+		if(dia->canBeMerged())
+		{
+			dia->pTriComposed[0]->merge();
+		}
+	}
 
 	if(meshUpdated)
 	{

@@ -2,7 +2,7 @@
 #include <OGRE\OgreManualObject.h>
 #include <OGRE\OgreCamera.h>
 
-Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p)
+Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, std::list<Diamond*> *diamondListP)
 {
 	v[0] = v1;
 	v[1] = v2;
@@ -11,10 +11,11 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p)
 	parent = p;
 	enfant[0] = NULL;
 	enfant[1] = NULL;
-	//diamond = NULL;
+	diamond = NULL;
+	diamondList = diamondListP;
 }
 
-Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p)
+Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, std::list<Diamond*> *diamondListP)
 {
 	v[0].x = x1;
 	v[0].y = y1;
@@ -43,7 +44,8 @@ Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, f
 	parent = p;
 	enfant[0] = NULL;
 	enfant[1] = NULL;
-	//diamond = NULL;
+	diamond = NULL;
+	diamondList = diamondListP;
 }
 
 Triangle::~Triangle(void)
@@ -130,16 +132,16 @@ void Triangle::split(float radius)
 	milieu.ny = v[0].ny;
 	milieu.nz = v[0].nz;
 
-	Triangle *enfant1 = new Triangle(v[1], milieu, v[0], this);
-	Triangle *enfant2 = new Triangle(v[2], milieu, v[1], this);
+	Triangle *enfant1 = new Triangle(v[1], milieu, v[0], this, diamondList);
+	Triangle *enfant2 = new Triangle(v[2], milieu, v[1], this, diamondList);
 
 	enfant[0] = enfant1;
 	enfant[1] = enfant2;
 
 	Triangle *tVoisin = voisin[1];
 
-	Triangle *enfantV1 = new Triangle(tVoisin->v[1], milieu, tVoisin->v[0], tVoisin);
-	Triangle *enfantV2 = new Triangle(tVoisin->v[2], milieu, tVoisin->v[1], tVoisin);
+	Triangle *enfantV1 = new Triangle(tVoisin->v[1], milieu, tVoisin->v[0], tVoisin, diamondList);
+	Triangle *enfantV2 = new Triangle(tVoisin->v[2], milieu, tVoisin->v[1], tVoisin, diamondList);
 
 	tVoisin->enfant[0] = enfantV1;
 	tVoisin->enfant[1] = enfantV2;
@@ -182,13 +184,19 @@ void Triangle::split(float radius)
 	}
 	enfantV2->voisin[2] = enfantV1;
 
-	/*if(diamond)
+	if(diamond)
+	{
+		diamondList->remove(diamond);
 		delete diamond;
+	}
 
 	if(voisin[1]->diamond)
-		delete voisin[1]->diamond;*/
+	{
+		diamondList->remove(voisin[1]->diamond);
+		delete voisin[1]->diamond;
+	}
 
-	//Diamond *dia = new Diamond(enfant1, enfant2, enfantV1, enfantV2);
+	enfant1->diamond = new Diamond(enfant1);
 }
 
 //#define MERGE_VOISIN(x) for(int i = 0 ; i < 3 ; i++) { if(!(x->voisin[i] == enfant2 || x->voisin[i] == enfantV1 || x->voisin[i] == enfantV2 || x->voisin[i] == enfant2)) { for(int j = 0 ; j < 3 ; j++) { if(x->voisin[i]->voisin[j] == x) x->voisin[i]->voisin[j] = x->parent; } } }
@@ -254,6 +262,21 @@ void Triangle::merge()
 	parent->enfant[1] = NULL;
 	parentVoisin->enfant[0] = NULL;
 	parentVoisin->enfant[1] = NULL;
+
+	diamondList->remove(enfant1->diamond);
+	delete enfant1->diamond;
+
+	if(Triangle::belongToADiamond(parent))
+	{
+		parent->diamond = new Diamond(parent);
+		diamondList->push_back(parent->diamond);
+	}
+
+	if(Triangle::belongToADiamond(parentVoisin))
+	{
+		parentVoisin->diamond = new Diamond(parentVoisin);
+		diamondList->push_back(parentVoisin->diamond);
+	}
 
 	delete enfant1;
 	delete enfant2;
@@ -384,4 +407,9 @@ float Triangle::error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius)
 
 	return 0.0f;
 
+}
+
+bool Triangle::belongToADiamond(Triangle *t)
+{
+	return t->voisin[0]->voisin[0]->voisin[0]->voisin[0] == t;
 }

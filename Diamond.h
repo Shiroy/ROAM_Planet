@@ -9,11 +9,8 @@ public:
 	Diamond(Triangle *t);
 	~Diamond(void);
 
-	void merge();
-
-private:
+	bool canBeMerged(/*A remplir*/);
 
 	Triangle *pTriComposed[4];
-	bool callByMerge;
 };
 

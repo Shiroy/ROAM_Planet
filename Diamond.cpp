@@ -13,25 +13,33 @@ Diamond::Diamond(Triangle *t1, Triangle *t2, Triangle *t3, Triangle *t4)
 	pTriComposed[1]->diamond = this;
 	pTriComposed[2]->diamond = this;
 	pTriComposed[3]->diamond = this;
-
-	callByMerge = false;
 }
 
+Diamond::Diamond(Triangle *t)
+{
+	pTriComposed[0] = t;
+	pTriComposed[1] = t->voisin[0];
+	pTriComposed[2] = t->voisin[0]->voisin[0];
+	pTriComposed[3] = t->voisin[0]->voisin[0]->voisin[0];
+
+	pTriComposed[0]->diamond = this;
+	pTriComposed[1]->diamond = this;
+	pTriComposed[2]->diamond = this;
+	pTriComposed[3]->diamond = this;
+}
 
 Diamond::~Diamond(void)
 {
-	if(!callByMerge)
-	{
-		pTriComposed[0]->diamond = NULL;
-		pTriComposed[1]->diamond = NULL;
-		pTriComposed[2]->diamond = NULL;
-		pTriComposed[3]->diamond = NULL;
-	}
+	pTriComposed[0]->diamond = NULL;
+	pTriComposed[1]->diamond = NULL;
+	pTriComposed[2]->diamond = NULL;
+	pTriComposed[3]->diamond = NULL;
 }
 
-void Diamond::merge()
+bool Diamond::canBeMerged()
 {
-	pTriComposed[0]->merge();
-	callByMerge = true;
-	delete this;
+	if(pTriComposed[0]->parent == NULL) //Root triangle
+		return false;
+
+	return true;
 }

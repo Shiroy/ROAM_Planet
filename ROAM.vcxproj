@@ -74,12 +74,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Demarage.cpp" />
+    <ClCompile Include="Diamond.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demarage.h" />
+    <ClInclude Include="Diamond.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
