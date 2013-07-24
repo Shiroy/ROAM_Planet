@@ -95,12 +95,14 @@ void Demarage::createViewport()
 void Demarage::createScene()
 {
 	m_node = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode");
+	m_node->setPosition(0,0,0);
 
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	m_planet = new Sphere(5000.0f, obj);
 	
 	m_node->attachObject(obj);
+
 	//m_node->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(-Ogre::Math::PI/4));
 }
 

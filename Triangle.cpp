@@ -336,13 +336,15 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		edge.y = v[2].y - v[0].y;
 		edge.z = v[2].z - v[0].z;
 
+		if (edge.squaredLength() < 1)  return false;
+
 		//std::cout << edge.length()/distance.length()*100 << std::endl;
 
 		
 		//if (val > 0.9)
 		//	std::cout << val << std::endl;
 
-		edge *= (std::powf(val, 6)+3/std::powf(val+1,8));
+		edge *= (std::powf(val, 8)+3/std::powf(val+1,8));
 		//return 0;
 		return (edge.length()/distance.length()*15) > 1;
 }

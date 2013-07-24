@@ -64,15 +64,20 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 		edge.y = pTriComposed[0]->v[2].y - pTriComposed[0]->v[0].y;
 		edge.z = pTriComposed[0]->v[2].z - pTriComposed[0]->v[0].z;
 
-		//std::cout << edge.length()/distance.length()*100 << std::endl;
 
-		
-		//if (val > 0.9)
-		//	std::cout << val << std::endl;
+		Ogre::Vector3 v1(pTriComposed[0]->v[0].x - pTriComposed[0]->v[1].x, pTriComposed[0]->v[0].y - pTriComposed[0]->v[1].y, pTriComposed[0]->v[0].z - pTriComposed[0]->v[1].z);
+		Ogre::Vector3 v2(pTriComposed[0]->v[0].x - pTriComposed[0]->v[2].x, pTriComposed[0]->v[0].y - pTriComposed[0]->v[2].y, pTriComposed[0]->v[0].z - pTriComposed[0]->v[2].z);
+		Ogre::Vector3 normal = v1.crossProduct(v2);
+		normal.normalise();
 
-		//edge *= (std::powf(val, 6)+3/std::powf(val+1,8));
-		//return 0;
-		return (edge.length()/distance.length()*30) < 1;
+		float val  = m_cam->getDirection().dotProduct(-normal);
+
+/*		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
+			return true;*/
+
+		edge *= (std::powf(val, 8)+1/std::powf(val+1,8));
+		//edge *= 1/std::powf(val+1,8);
+		return (edge.length()/distance.length()*50) < 1;
 
 
 
