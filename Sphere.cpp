@@ -106,7 +106,7 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
-	std::cout << "Diamond : " << m_diamondList.size() << " ";
+	//std::cout << "Diamond : " << m_diamondList.size() << " ";
 
 	for(int i = 0 ; i != m_diamondList.size() ; ++i)
 	{
@@ -133,6 +133,6 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 		render(m_obj, nbTri, recurseLevel);
 		m_obj->end();
 
-		std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
+		//std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
 	}
 }

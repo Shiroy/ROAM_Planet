@@ -1,5 +1,6 @@
 #include "Diamond.h"
 #include "Triangle.h"
+#include <OGRE\OgreCamera.h>
 #define NULL 0
 
 Diamond::Diamond(Triangle *t1, Triangle *t2, Triangle *t3, Triangle *t4)
@@ -50,6 +51,30 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 
 	if(!isDiamondVisible(m_cam))
 		return true;
+
+	Vertex center = pTriComposed[0]->v[1];
+		Ogre::Vector3 milieu;
+		milieu.x = center.x;
+		milieu.y = center.y;
+		milieu.z = center.z;
+		Ogre::Vector3 distance = milieu - m_cam->getPosition();
+
+		Ogre::Vector3 edge;
+		edge.x = pTriComposed[0]->v[2].x - pTriComposed[0]->v[0].x;
+		edge.y = pTriComposed[0]->v[2].y - pTriComposed[0]->v[0].y;
+		edge.z = pTriComposed[0]->v[2].z - pTriComposed[0]->v[0].z;
+
+		//std::cout << edge.length()/distance.length()*100 << std::endl;
+
+		
+		//if (val > 0.9)
+		//	std::cout << val << std::endl;
+
+		//edge *= (std::powf(val, 6)+3/std::powf(val+1,8));
+		//return 0;
+		return (edge.length()/distance.length()*30) < 1;
+
+
 
 	return false;
 }

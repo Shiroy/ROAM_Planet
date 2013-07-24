@@ -79,7 +79,7 @@ void Demarage::createCamera()
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(200000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -1002));
+	m_camera->setPosition(Ogre::Vector3(0, 0, -30000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -97,7 +97,7 @@ void Demarage::createScene()
 
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
-	m_planet = new Sphere(1000.0f, obj);
+	m_planet = new Sphere(5000.0f, obj);
 	
 	m_node->attachObject(obj);
 	//m_node->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(-Ogre::Math::PI/4));
@@ -112,11 +112,11 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	m_mouse->capture();
 
 	currenttick = GetTickCount();
-	/*if((currenttick - lastfpstick) > 1000)
+	if((currenttick - lastfpstick) > 1000)
 	{
 		std::cout << "FPS : " << m_window->getAverageFPS() << std::endl;
 		lastfpstick = currenttick;
-	}*/
+	}
 	
 	if(!stopUpdate)
 		m_planet->updateMesh(m_node->getPosition() - m_camera->getPosition(), m_camera);
