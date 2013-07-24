@@ -54,5 +54,7 @@ private:
 
 	int lastfpstick;
 	int currenttick;
+
+	int lastUpdateTick;
 };
 

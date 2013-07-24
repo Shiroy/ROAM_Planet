@@ -18,6 +18,7 @@ Demarage::Demarage(void)
 	stopUpdate = false;
 
 	lastfpstick = 0;
+	lastUpdateTick = 0;
 	currenttick = 0;
 }
 
@@ -118,8 +119,11 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 		lastfpstick = currenttick;
 	}
 	
-	if(!stopUpdate)
+	if(!stopUpdate && (currenttick - lastUpdateTick) > 250)
+	{
+		lastUpdateTick = currenttick;
 		m_planet->updateMesh(m_node->getPosition() - m_camera->getPosition(), m_camera);
+	}
 
 	//std::cout << "Distance : " <<(m_camera->getPosition() - m_node->getPosition()).length() << " (update : " << (stopUpdate == true ? "off" : "on") << ")" << std::endl;
 
