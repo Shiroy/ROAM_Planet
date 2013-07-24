@@ -77,9 +77,9 @@ void Demarage::createSceneManager()
 void Demarage::createCamera()
 {
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
-	m_camera->setNearClipDistance(5);
+	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(200000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -50000));
+	m_camera->setPosition(Ogre::Vector3(0, 0, -1500));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -126,7 +126,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
 
-	Ogre::Real vitesse = 8000.0f;
+	Ogre::Real vitesse = 100.0f;
 	Ogre::Real vitesseRot = 0.01f;
 
 	Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;

@@ -268,7 +268,6 @@ float Triangle::ratio(Ogre::Camera *m_cam)
 	milieu.x = (v[2].x + v[0].x) / 2;
 	milieu.y = (v[2].y + v[0].y) / 2;
 	milieu.z = (v[2].z + v[0].z) / 2;
-
 	Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
 	Ogre::Vector3 edge;
@@ -276,8 +275,12 @@ float Triangle::ratio(Ogre::Camera *m_cam)
 	edge.y = v[2].y - v[0].y;
 	edge.z = v[2].z - v[0].z;
 
-	//std::cout << edge.length() << std::endl;(
-	return 1000*((edge.squaredLength()) / distance.squaredLength());
+	
+
+	//std::cout << edge.length()/distance.length()*100 << std::endl;
+	//return 0;
+	return edge.length()/distance.length()*30;
+	//return 1000*((edge.squaredLength()) / distance.squaredLength());
 }
 
 bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {
@@ -292,7 +295,21 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
 			return false; //Le triangle est hors champ
 
-		return (ratio(m_cam) > 1.0f);
+		Ogre::Vector3 milieu;
+		milieu.x = (v[2].x + v[0].x) / 2;
+		milieu.y = (v[2].y + v[0].y) / 2;
+		milieu.z = (v[2].z + v[0].z) / 2;
+		Ogre::Vector3 distance = milieu - m_cam->getPosition();
+
+		Ogre::Vector3 edge;
+		edge.x = v[2].x - v[0].x;
+		edge.y = v[2].y - v[0].y;
+		edge.z = v[2].z - v[0].z;
+
+		edge *= m_cam->getDirection().dotProduct(-normal);
+		//std::cout << edge.length()/distance.length()*100 << std::endl;
+		//return 0;
+		return (edge.length()/distance.length()*15) > 1;
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
