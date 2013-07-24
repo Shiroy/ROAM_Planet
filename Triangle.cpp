@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include "simplexnoise.h"
 #include <OGRE\OgreManualObject.h>
 #include <OGRE\OgreCamera.h>
 
@@ -122,7 +123,7 @@ void Triangle::split(float radius)
 
 	Ogre::Vector3 vMilieu(milieu.x, milieu.y, milieu.z);
 	vMilieu.normalise();
-	vMilieu *= radius;
+	vMilieu *= radius + scaled_raw_noise_3d(0, 12, milieu.x/80, milieu.y/80, milieu.z/80);
 
 	milieu.x = vMilieu.x;
 	milieu.y = vMilieu.y;
