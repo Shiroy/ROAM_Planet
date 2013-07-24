@@ -2,7 +2,7 @@
 #include <OGRE\OgreManualObject.h>
 #include <OGRE\OgreCamera.h>
 
-Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, std::list<Diamond*> *diamondListP)
+Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, std::vector<Diamond*> *diamondListP)
 {
 	v[0] = v1;
 	v[1] = v2;
@@ -15,7 +15,7 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, std::list<Diamo
 	diamondList = diamondListP;
 }
 
-Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, std::list<Diamond*> *diamondListP)
+Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, std::vector<Diamond*> *diamondListP)
 {
 	v[0].x = x1;
 	v[0].y = y1;
@@ -188,6 +188,7 @@ void Triangle::split(float radius)
 	{
 		//diamondList->remove(diamond);
 		diamond->removed = true;
+		diamond->nullAllTriangle();		
 		//delete diamond;
 	}
 
@@ -196,6 +197,7 @@ void Triangle::split(float radius)
 		/*diamondList->remove(voisin[1]->diamond);
 		delete voisin[1]->diamond;*/
 		voisin[1]->diamond->removed = true;
+		voisin[1]->diamond->nullAllTriangle();		
 	}
 
 	enfant1->diamond = new Diamond(enfant1);
@@ -267,6 +269,7 @@ void Triangle::merge()
 	parentVoisin->enfant[1] = NULL;
 
 	enfant1->diamond->removed = true;
+	enfant1->diamond->nullAllTriangle();	
 
 	if(Triangle::belongToADiamond(parent))
 	{

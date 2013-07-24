@@ -108,14 +108,19 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 
 	std::cout << "Diamond : " << m_diamondList.size() << " ";
 
-	for(std::list<Diamond*>::const_iterator i = m_diamondList.begin() ; i != m_diamondList.end() ; ++i)
+	for(int i = 0 ; i != m_diamondList.size() ; ++i)
 	{
-		Diamond *dia = *i;
+		Diamond *dia = m_diamondList[i];
 		if(dia->canBeMerged(m_cam))
 		{
-			std::cout << "Merge" << std::endl;
+			//std::cout << "Merge" << std::endl;
 			dia->pTriComposed[0]->merge();
 			meshUpdated = true;
+		}
+		else if(dia->removed)
+		{			
+			m_diamondList.erase(m_diamondList.begin()+i);
+			i--;
 		}
 	}
 

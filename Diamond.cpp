@@ -34,10 +34,10 @@ Diamond::Diamond(Triangle *t)
 
 Diamond::~Diamond(void)
 {
-	pTriComposed[0]->diamond = NULL;
+	/*pTriComposed[0]->diamond = NULL;
 	pTriComposed[1]->diamond = NULL;
 	pTriComposed[2]->diamond = NULL;
-	pTriComposed[3]->diamond = NULL;
+	pTriComposed[3]->diamond = NULL;*/
 }
 
 bool Diamond::canBeMerged(Ogre::Camera *m_cam)
@@ -60,4 +60,10 @@ bool Diamond::isDiamondVisible(Ogre::Camera *m_cam)
 		return false;
 	else
 		return true;
+}
+
+void Diamond::nullAllTriangle()
+{
+	for(int i = 0 ; i < 4 ; i++)
+		pTriComposed[i]->diamond = NULL;
 }

@@ -27,6 +27,6 @@ private:
 	Triangle *rootTriangle[12];
 	float m_radius;
 	Ogre::ManualObject *m_obj;
-	std::list<Diamond*> m_diamondList;
+	std::vector<Diamond*> m_diamondList;
 };
 

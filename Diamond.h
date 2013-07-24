@@ -16,6 +16,7 @@ public:
 
 	bool canBeMerged(Ogre::Camera *m_cam);
 	bool isDiamondVisible(Ogre::Camera *m_cam);
+	void nullAllTriangle();
 
 	Triangle *pTriComposed[4];
 
