@@ -92,67 +92,11 @@ Sphere::~Sphere(void)
 
 void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
-	int recurse = 1;	
 
-	recurse = rootTriangle[0]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[1]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[2]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[3]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[4]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[5]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[6]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[7]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[8]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[9]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[10]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
-
-	recurse = rootTriangle[11]->render(obj, nbTri, recurse);
-	if(recurse > nbRecurse)
-		nbRecurse = recurse;
-	recurse = 1;
+	for (int i=0 ; i<12 ; ++i) {
+		int recurse = 1;
+		nbRecurse = std::max(rootTriangle[i]->render(obj, nbTri, recurse), recurse);
+	}
 }
 
 void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)

@@ -34,11 +34,11 @@ public:
 
 	void split(float radius);
 	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
-
+	bool needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam);
 	void mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 	void merge();
 
-	float variance(Ogre::Vector3 dPos, float exactRadius, Ogre::Camera *m_cam);
+	float ratio(Ogre::Camera *m_cam);
 
 	float error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius);
 

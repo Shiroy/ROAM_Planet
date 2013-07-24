@@ -261,29 +261,38 @@ void Triangle::merge()
 	delete enfantV2;
 }
 
-float Triangle::variance(Ogre::Vector3 dPos, float exactRadius, Ogre::Camera *m_cam)
+float Triangle::ratio(Ogre::Camera *m_cam)
 {
-	float squaredRadius = exactRadius * exactRadius;
-
-	Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
-	Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
-
-	Ogre::Vector3 normal = v1.crossProduct(v2);
-	normal.normalise();
 
 	Ogre::Vector3 milieu;
 	milieu.x = (v[2].x + v[0].x) / 2;
 	milieu.y = (v[2].y + v[0].y) / 2;
 	milieu.z = (v[2].z + v[0].z) / 2;
 
-	Ogre::Vector3 vecDir = milieu - m_cam->getPosition();
+	Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
 	Ogre::Vector3 edge;
 	edge.x = v[2].x - v[0].x;
 	edge.y = v[2].y - v[0].y;
 	edge.z = v[2].z - v[0].z;
 
-	return edge.squaredLength() / vecDir.squaredLength();
+	//std::cout << edge.length() << std::endl;(
+	return 1000*((edge.squaredLength()) / distance.squaredLength());
+}
+
+bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {
+		Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
+		Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
+		Ogre::Vector3 normal = v1.crossProduct(v2);
+		normal.normalise();
+
+		if(m_cam->getDirection().dotProduct(normal) > 0) // le triangle est cache car il est sur l'autre face de la planete
+			return false;
+
+		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
+			return false; //Le triangle est hors champ
+
+		return (ratio(m_cam) > 1.0f);
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
@@ -297,24 +306,9 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-		float var = variance(dPos, radius, m_cam);
-		if(!var) //No update needed
-			return;
-
-		if(dPos.dotProduct(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) > 0)
-			return;
-
-		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
-			return; //Le triangle n'est pas du tout visible
-
-		float ratio = var;
-
-		//std::cout << "Ratio: " << ratio << std::endl;
-
-		if(ratio > 0.001f)
-		{
-			split(radius);
 			meshUpdated = true;
+		if (needsSplit(dPos, meshUpdated, m_cam)) {
+			split(radius);
 		}
 	}
 }
