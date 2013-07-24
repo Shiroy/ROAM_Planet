@@ -135,7 +135,13 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	Ogre::Real vitesse = 1000.0f;
 	Ogre::Real vitesseRot = 0.01f;
 
-	Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;
+	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
+	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 5000.f; // rayon
+	Ogre::Real atmosphericDrag = 1.f;
+	if (altitude && altitude < 1000.f)
+		atmosphericDrag = altitude / 1000.f;
+
+	Ogre::Real mouvement = vitesse * atmosphericDrag * e.timeSinceLastFrame;
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 
 	if(m_keyboard->isKeyDown(OIS::KC_W))
