@@ -79,7 +79,7 @@ void Demarage::createCamera()
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(200000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -1500));
+	m_camera->setPosition(Ogre::Vector3(0, 0, -1002));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -90,7 +90,7 @@ void Demarage::createViewport()
 	m_camera->setAspectRatio(Ogre::Real(Ogre::Real(m_viewport->getActualWidth()) / Ogre::Real(m_viewport->getActualHeight())));
 	m_viewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 }
-
+	
 void Demarage::createScene()
 {
 	m_node = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode");
@@ -126,7 +126,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
 
-	Ogre::Real vitesse = 100.0f;
+	Ogre::Real vitesse = 1000.0f;
 	Ogre::Real vitesseRot = 0.01f;
 
 	Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;

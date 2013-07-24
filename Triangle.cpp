@@ -312,7 +312,9 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		Ogre::Vector3 normal = v1.crossProduct(v2);
 		normal.normalise();
 
-		if(m_cam->getDirection().dotProduct(normal) > 0) // le triangle est cache car il est sur l'autre face de la planete
+		float val  = m_cam->getDirection().dotProduct(-normal);
+
+		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
 			return false;
 
 		if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
@@ -329,8 +331,13 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		edge.y = v[2].y - v[0].y;
 		edge.z = v[2].z - v[0].z;
 
-		edge *= m_cam->getDirection().dotProduct(-normal);
 		//std::cout << edge.length()/distance.length()*100 << std::endl;
+
+		
+		//if (val > 0.9)
+		//	std::cout << val << std::endl;
+
+		edge *= (std::powf(val, 6)+3/std::powf(val+1,6));
 		//return 0;
 		return (edge.length()/distance.length()*15) > 1;
 }
