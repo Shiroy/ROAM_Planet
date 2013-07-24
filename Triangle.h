@@ -44,6 +44,8 @@ public:
 
 	static bool belongToADiamond(Triangle *t);
 
+	bool isVisible(Ogre::Camera *m_cam);
+
 private:	
 
 	Vertex v[3];

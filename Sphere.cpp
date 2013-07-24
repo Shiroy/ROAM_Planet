@@ -5,7 +5,8 @@
 #define NORM Ogre::Math::Sqrt(3) * m_radius
 
 Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
-{	
+{
+	m_diamondList.clear();
 	m_obj = obj;
 	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, &m_diamondList); //DCB (dessous)
 	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, &m_diamondList); //BAD
@@ -105,12 +106,16 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
+	std::cout << "Diamond : " << m_diamondList.size() << " ";
+
 	for(std::list<Diamond*>::const_iterator i = m_diamondList.begin() ; i != m_diamondList.end() ; ++i)
 	{
 		Diamond *dia = *i;
-		if(dia->canBeMerged())
+		if(dia->canBeMerged(m_cam))
 		{
+			std::cout << "Merge" << std::endl;
 			dia->pTriComposed[0]->merge();
+			meshUpdated = true;
 		}
 	}
 

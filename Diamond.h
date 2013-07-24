@@ -2,6 +2,11 @@
 
 class Triangle;
 
+namespace Ogre
+{
+	class Camera;
+};
+
 class Diamond
 {
 public:
@@ -9,8 +14,11 @@ public:
 	Diamond(Triangle *t);
 	~Diamond(void);
 
-	bool canBeMerged(/*A remplir*/);
+	bool canBeMerged(Ogre::Camera *m_cam);
+	bool isDiamondVisible(Ogre::Camera *m_cam);
 
 	Triangle *pTriComposed[4];
+
+	bool removed;
 };
 

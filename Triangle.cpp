@@ -186,17 +186,20 @@ void Triangle::split(float radius)
 
 	if(diamond)
 	{
-		diamondList->remove(diamond);
-		delete diamond;
+		//diamondList->remove(diamond);
+		diamond->removed = true;
+		//delete diamond;
 	}
 
 	if(voisin[1]->diamond)
 	{
-		diamondList->remove(voisin[1]->diamond);
-		delete voisin[1]->diamond;
+		/*diamondList->remove(voisin[1]->diamond);
+		delete voisin[1]->diamond;*/
+		voisin[1]->diamond->removed = true;
 	}
 
 	enfant1->diamond = new Diamond(enfant1);
+	diamondList->push_back(enfant1->diamond);
 }
 
 //#define MERGE_VOISIN(x) for(int i = 0 ; i < 3 ; i++) { if(!(x->voisin[i] == enfant2 || x->voisin[i] == enfantV1 || x->voisin[i] == enfantV2 || x->voisin[i] == enfant2)) { for(int j = 0 ; j < 3 ; j++) { if(x->voisin[i]->voisin[j] == x) x->voisin[i]->voisin[j] = x->parent; } } }
@@ -226,7 +229,7 @@ void Triangle::merge()
 	{
 		if(enfant1->voisin[1]->voisin[i] == enfant1)
 		{
-			enfant1->voisin[1]->voisin[i] == parent;
+			enfant1->voisin[1]->voisin[i] = parent;
 			parent->voisin[0] = enfant1->voisin[1];
 		}
 	}
@@ -235,7 +238,7 @@ void Triangle::merge()
 	{
 		if(enfant2->voisin[1]->voisin[i] == enfant2)
 		{
-			enfant2->voisin[1]->voisin[i] == parent;
+			enfant2->voisin[1]->voisin[i] = parent;
 			parent->voisin[2] = enfant2->voisin[1];
 		}
 	}
@@ -244,7 +247,7 @@ void Triangle::merge()
 	{
 		if(enfantV1->voisin[1]->voisin[i] == enfantV1)
 		{
-			enfantV1->voisin[1]->voisin[i] == parentVoisin;
+			enfantV1->voisin[1]->voisin[i] = parentVoisin;
 			parentVoisin->voisin[0] = enfantV1->voisin[1];
 		}
 	}
@@ -253,7 +256,7 @@ void Triangle::merge()
 	{
 		if(enfantV2->voisin[1]->voisin[i] == enfantV2)
 		{
-			enfantV2->voisin[1]->voisin[i] == parentVoisin;
+			enfantV2->voisin[1]->voisin[i] = parentVoisin;
 			parentVoisin->voisin[2] = enfantV2->voisin[1];
 		}
 	}
@@ -263,8 +266,7 @@ void Triangle::merge()
 	parentVoisin->enfant[0] = NULL;
 	parentVoisin->enfant[1] = NULL;
 
-	diamondList->remove(enfant1->diamond);
-	delete enfant1->diamond;
+	enfant1->diamond->removed = true;
 
 	if(Triangle::belongToADiamond(parent))
 	{
@@ -419,4 +421,12 @@ float Triangle::error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius)
 bool Triangle::belongToADiamond(Triangle *t)
 {
 	return t->voisin[0]->voisin[0]->voisin[0]->voisin[0] == t;
+}
+
+bool Triangle::isVisible(Ogre::Camera *m_cam)
+{
+	if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
+		return false; //Le triangle est hors champ
+	else
+		return true;
 }
