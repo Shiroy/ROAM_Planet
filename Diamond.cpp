@@ -46,6 +46,9 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 	if(removed)
 		return false;
 
+	if(pTriComposed[0]->m_recurseLevel <= 6)
+		return false;
+
 	if(pTriComposed[0]->parent == NULL) //Root triangle
 		return false;
 

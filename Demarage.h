@@ -8,7 +8,7 @@
 #include <OGRE\OgreWindowEventUtilities.h>
 #include <OIS\OIS.h>
 
-class Demarage : public Ogre::FrameListener, public Ogre::WindowEventListener
+class Demarage : public Ogre::FrameListener, public Ogre::WindowEventListener/*, public OIS::KeyListener, public OIS::MouseListener*/
 {
 public:
 	Demarage(void);
@@ -19,6 +19,10 @@ public:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &e);
 	virtual void windowResized(Ogre::RenderWindow *wnd);
 	virtual void windowClosed(Ogre::RenderWindow *wnd);
+
+	//virtual bool mouseMoved(const OIS::MouseEvent &e);
+	//virtual bool keyPressed(const OIS::KeyEvent &e);
+	//virtual bool keyReleased(const OIS::KeyEvent &e);
 
 	Ogre::Camera *getCamera();
 	Ogre::SceneManager *getSceneManager();

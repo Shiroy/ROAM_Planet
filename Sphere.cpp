@@ -8,23 +8,23 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
 {
 	m_diamondList.clear();
 	m_obj = obj;
-	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, &m_diamondList); //DCB (dessous)
-	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, &m_diamondList); //BAD
+	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //DCB (dessous)
+	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //BAD
 
-	rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL, &m_diamondList); //ABF (face avant)
-	rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL, &m_diamondList); //FEA
+	rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList); //ABF (face avant)
+	rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList); //FEA
 
-	rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL, &m_diamondList); //BCG (cote gauche)
-	rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL, &m_diamondList); //GFB
+	rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL, 1, &m_diamondList); //BCG (cote gauche)
+	rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL, 1, &m_diamondList); //GFB
 
-	rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL, &m_diamondList); //CDH (face arriere)
-	rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL, &m_diamondList); //HGC
+	rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList); //CDH (face arriere)
+	rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList); //HGC
 
-	rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL, &m_diamondList); //DAE (cote droit)
-	rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL, &m_diamondList); //EHD
+	rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL, 1, &m_diamondList); //DAE (cote droit)
+	rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL, 1, &m_diamondList); //EHD
 
-	rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL, &m_diamondList); //EFG (haut)
-	rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL, &m_diamondList); //GHE
+	rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL, 1, &m_diamondList); //EFG (haut)
+	rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL, 1, &m_diamondList); //GHE
 
 	//Initialisation des voisin
 
