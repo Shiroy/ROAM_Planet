@@ -22,6 +22,8 @@ public:
 	Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *parent, int recurseLevel, std::vector<Diamond*> *diamondList);
 	~Triangle(void);
 
+	void calculateNormal();
+
 	void setVoisin(int voisin, Triangle *v);
 	Triangle *getVoisin(int voisin);
 
@@ -51,6 +53,8 @@ public:
 private:	
 
 	Vertex v[3];
+
+	Ogre::Vector3 normal;
 
 	Triangle *parent;
 	Triangle *voisin[3];

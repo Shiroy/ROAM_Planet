@@ -45,6 +45,7 @@ private:
 	Ogre::Camera *m_camera;
 	Ogre::Viewport *m_viewport;
 	Ogre::SceneNode *m_node;
+	Ogre::SceneNode * m_lightNode;
 
 	OIS::InputManager *m_inputManager;
 

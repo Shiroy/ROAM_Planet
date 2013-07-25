@@ -129,7 +129,7 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 		int nbTri = 0;
 		int recurseLevel = 1;
 		m_obj->clear();
-		m_obj->begin("BasicWhite", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		render(m_obj, nbTri, recurseLevel);
 		m_obj->end();
 

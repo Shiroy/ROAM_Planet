@@ -1,0 +1,12 @@
+material cube
+{
+    technique
+    {
+        pass
+        {
+            ambient 0.0 0.0 1.0
+            diffuse 1.0 1.0 1.0
+			scene_blend colour_blend
+        }
+    }
+}

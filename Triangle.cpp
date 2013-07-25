@@ -15,6 +15,7 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLeve
 	diamond = NULL;
 	diamondList = diamondListP;
 	m_recurseLevel = recurseLevel;
+	calculateNormal();
 }
 
 Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP)
@@ -49,6 +50,7 @@ Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, f
 	diamond = NULL;
 	diamondList = diamondListP;
 	m_recurseLevel = recurseLevel;
+	calculateNormal();
 }
 
 Triangle::~Triangle(void)
@@ -57,6 +59,14 @@ Triangle::~Triangle(void)
 		delete enfant[0];
 	if(enfant[1])
 		delete enfant[1];
+}
+
+void Triangle::calculateNormal()
+{
+	Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
+	Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
+	normal = v1.crossProduct(v2);
+	normal.normalise();
 }
 
 void Triangle::setVoisin(int vNum, Triangle *v)
@@ -99,11 +109,11 @@ int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
 	else
 	{
 		obj->position(v[0].x, v[0].y, v[0].z);
-		obj->normal(v[0].nx, v[0].ny, v[0].nz);
+		obj->normal(normal);
 		obj->position(v[1].x, v[1].y, v[1].z);
-		obj->normal(v[1].nx, v[1].ny, v[1].nz);
+		obj->normal(normal);
 		obj->position(v[2].x, v[2].y, v[2].z);
-		obj->normal(v[2].nx, v[2].ny, v[2].nz);
+		obj->normal(normal);
 		nbTri++;
 		return nbRecurse;
 	}
@@ -314,15 +324,11 @@ float Triangle::ratio(Ogre::Camera *m_cam)
 	//return 1000*((edge.squaredLength()) / distance.squaredLength());
 }
 
-bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {
-		Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
-		Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
-		Ogre::Vector3 normal = v1.crossProduct(v2);
-		normal.normalise();
+bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {		
 
 		float val  = m_cam->getDirection().dotProduct(-normal);
 
-		if(m_recurseLevel < 6)
+		if(m_recurseLevel < 9)
 			return true;
 
 		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
