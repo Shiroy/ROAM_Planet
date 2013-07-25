@@ -37,7 +37,6 @@ public:
 	void split(float radius);
 	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 	bool needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam);
-	void mergeIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
 	void merge();
 
 	float ratio(Ogre::Camera *m_cam);

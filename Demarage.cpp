@@ -82,7 +82,7 @@ void Demarage::createCamera()
 	m_camera->setFarClipDistance(200000);
 	m_camera->setPosition(Ogre::Vector3(0, 0, -30000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-	//m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
 
 void Demarage::createViewport()
