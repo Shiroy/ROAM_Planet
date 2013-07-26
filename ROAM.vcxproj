@@ -40,13 +40,13 @@
     <IncludePath>C:\OgreSDK\boost;pthread/include;C:\OgreSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>pthread/libs;C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\OgreSDK\boost;pthread/include;C:\OgreSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>pthread/lib;C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
