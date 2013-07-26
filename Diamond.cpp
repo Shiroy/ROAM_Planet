@@ -80,7 +80,7 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 
 		edge *= (std::powf(val, 2)+1/std::powf(val+1,2));
 		//edge *= 1/std::powf(val+1,8);
-		return (edge.squaredLength()/distance.squaredLength()*50) < 1;
+		return (edge.squaredLength()/distance.squaredLength()*1000) < 1;
 
 
 

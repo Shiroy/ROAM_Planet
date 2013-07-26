@@ -28,5 +28,6 @@ private:
 	float m_radius;
 	Ogre::ManualObject *m_obj;
 	std::vector<Diamond*> m_diamondList;
+	bool firstDraw;
 };
 

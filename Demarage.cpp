@@ -99,16 +99,20 @@ void Demarage::createScene()
 
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
-	m_planet = new Sphere(5000.0f, obj);
+	obj->estimateVertexCount(50000);
+	m_planet = new Sphere(10000.0f, obj);
 
 	Ogre::Light *light = m_sceneMgr->createLight();
-	light->setType(Ogre::Light::LT_POINT);
+	light->setType(Ogre::Light::LT_DIRECTIONAL);
 	light->setDiffuseColour(Ogre::ColourValue::White);
+	light->setDirection(Ogre::Vector3(0, -1, 0));
 
-	m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light");
+	m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-500000, 0, 0));
 	m_lightNode->attachObject(light);
 	
 	m_node->attachObject(obj);
+
+	m_sceneMgr->setSkyBox(true, "deep_space");
 
 	//m_node->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(-Ogre::Math::PI/4));
 }
@@ -128,7 +132,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 		lastfpstick = currenttick;
 	}
 	
-	if(!stopUpdate && (currenttick - lastUpdateTick) > 250)
+	if(!stopUpdate && (currenttick - lastUpdateTick) > 500)
 	{
 		lastUpdateTick = currenttick;
 		m_planet->updateMesh(m_node->getPosition() - m_camera->getPosition(), m_camera);
@@ -143,7 +147,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	Ogre::Real vitesseRot = 0.01f;
 
 	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
-	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 5000.f; // rayon
+	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 10000.f; // rayon
 	Ogre::Real atmosphericDrag = 1.f;
 	if (altitude && altitude < 1000.f)
 		atmosphericDrag = altitude / 1000.f;
@@ -159,8 +163,6 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 		deplacement.x -= mouvement;
 	if(m_keyboard->isKeyDown(OIS::KC_D))
 		deplacement.x += mouvement;
-
-	
 
 	if(m_keyboard->isKeyDown(OIS::KC_U) && !updateKeyPressed)
 	{
@@ -190,7 +192,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	m_camera->yaw(mRotationY);
 	m_camera->pitch(mRotationX);
 	m_camera->moveRelative(deplacement);
-	m_lightNode->setPosition(m_camera->getPosition());
+	//m_lightNode->setPosition(m_camera->getPosition());
 
 	return true;
 }

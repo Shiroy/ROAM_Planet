@@ -338,7 +338,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		edge *= (std::powf(val, 2)+4/std::powf(val+1,2));
 		//return 0;
-		return (edge.squaredLength()/distance.squaredLength()*15) > 1;
+		return (edge.squaredLength()/distance.squaredLength()*1000) > 1;
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
@@ -355,6 +355,7 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 			meshUpdated = true;
 		if (needsSplit(dPos, meshUpdated, m_cam)) {
 			split(radius);
+			//splitIfNeeded(dPos, radius, meshUpdated, m_cam);
 		}
 	}
 }

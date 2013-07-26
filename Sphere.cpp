@@ -83,6 +83,8 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
 		t->split(m_radius);
 		t = t->getEnfant(0);
 	}
+
+	firstDraw = true;
 }
 
 Sphere::~Sphere(void)
@@ -128,8 +130,13 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	{
 		int nbTri = 0;
 		int recurseLevel = 1;
-		m_obj->clear();
-		m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		if(firstDraw)
+		{
+			m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+			firstDraw = false;
+		}
+		else
+			m_obj->beginUpdate(0);
 		render(m_obj, nbTri, recurseLevel);
 		m_obj->end();
 
