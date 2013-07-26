@@ -191,4 +191,8 @@ static const int simplex[64][4] = {
 };
 
 
+/* Custom Planet Noise */
+float planetNoise(const float x, const float y, const float z);
+
+
 #endif /*SIMPLEX_H_*/

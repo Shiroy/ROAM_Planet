@@ -473,3 +473,15 @@ int fastfloor( const float x ) { return x > 0 ? (int) x : (int) x - 1; }
 float dot( const int* g, const float x, const float y ) { return g[0]*x + g[1]*y; }
 float dot( const int* g, const float x, const float y, const float z ) { return g[0]*x + g[1]*y + g[2]*z; }
 float dot( const int* g, const float x, const float y, const float z, const float w ) { return g[0]*x + g[1]*y + g[2]*z + g[3]*w; }
+
+
+/* Custom Planet Noise */
+
+float planetNoise(const float x, const float y, const float z)
+{
+	return	scaled_raw_noise_3d(-15, 20, x/4000, y/4000, z/4000)
+			+ scaled_raw_noise_3d(-15, 25, x/500, y/500, z/300)
+			+ scaled_raw_noise_3d(-8, 12, x/150, y/150, z/100)
+			+ scaled_raw_noise_3d(-6, 8, x/90, y/90, z/80)
+			+ scaled_raw_noise_3d(-1, 3, x/40, y/40, z/30);
+}

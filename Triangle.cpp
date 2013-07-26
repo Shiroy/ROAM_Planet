@@ -135,7 +135,7 @@ void Triangle::split(float radius)
 
 	Ogre::Vector3 vMilieu(milieu.x, milieu.y, milieu.z);
 	vMilieu.normalise();
-	vMilieu *= radius + scaled_raw_noise_3d(0, 12, milieu.x/80, milieu.y/80, milieu.z/80);
+	vMilieu *= radius + planetNoise(milieu.x, milieu.y, milieu.z);
 
 	milieu.x = vMilieu.x;
 	milieu.y = vMilieu.y;
