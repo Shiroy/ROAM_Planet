@@ -1,13 +1,16 @@
 #include "Sphere.h"
 #include "Triangle.h"
+#include <OGRE\OgreCamera.h>
 #include <math.h>
 
 #define NORM Ogre::Math::Sqrt(3) * m_radius
 
-Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
+Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node) : m_radius(radius)
 {
 	m_diamondList.clear();
 	m_obj = obj;
+	m_node = node;
+	m_meshUpdated = false;
 	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //DCB (dessous)
 	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //BAD
 
@@ -85,12 +88,42 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj) : m_radius(radius)
 	}
 
 	firstDraw = true;
+
+	pthread_mutex_init(&m_mutex, NULL);
+
+	updateThreadArg *arg = new updateThreadArg;
+	arg->thisPointer = this;
+	arg->m_cam = cam;
+	pthread_create(&m_thread, NULL, updateThread, (void*)arg);
 }
 
 Sphere::~Sphere(void)
 {
 	for(int i = 0 ; i < 12 ; i++)
 		delete rootTriangle[i];
+}
+
+void Sphere::renderIfUpdated()
+{
+	if(m_meshUpdated)
+	{
+		pthread_mutex_lock(&m_mutex);
+		int nbTri = 0;
+		int recurseLevel = 1;
+		if(firstDraw)
+		{
+			m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+			firstDraw = false;
+		}
+		else
+			m_obj->beginUpdate(0);
+		render(m_obj, nbTri, recurseLevel);
+		m_obj->end();
+
+		//std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
+		m_meshUpdated = false;
+		pthread_mutex_unlock(&m_mutex);
+	}
 }
 
 void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
@@ -102,13 +135,16 @@ void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 	}
 }
 
-void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
+bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 {
 	bool meshUpdated = false;
 	for(int i = 0 ; i < 12 ; i++)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
 
 	//std::cout << "Diamond : " << m_diamondList.size() << " ";
+
+	int tick = GetTickCount();
+	int newTick = 0;
 
 	for(int i = 0 ; i != m_diamondList.size() ; ++i)
 	{
@@ -125,21 +161,35 @@ void Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 			i--;
 		}
 	}
+	newTick = GetTickCount();
+	//std::cout << "Extracting object done (diff : " << newTick - tick << ")" << std::endl;
+	tick = newTick;
 
-	if(meshUpdated)
+	return meshUpdated;
+}
+
+void *Sphere::updateThread(void *arg)
+{
+	updateThreadArg *tArg = (updateThreadArg*)arg;
+	Sphere *caller = tArg->thisPointer;
+	Ogre::Camera *m_cam = tArg->m_cam;
+	delete tArg;
+
+	int tickCount = GetTickCount(); //update timer
+	int lastTick = 0;
+
+	while(true)
 	{
-		int nbTri = 0;
-		int recurseLevel = 1;
-		if(firstDraw)
-		{
-			m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-			firstDraw = false;
-		}
-		else
-			m_obj->beginUpdate(0);
-		render(m_obj, nbTri, recurseLevel);
-		m_obj->end();
+		tickCount = GetTickCount();
+		if(tickCount - lastTick < 250)
+			continue;
 
-		//std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
+		Ogre::Vector3 dPos = caller->m_node->getPosition() - m_cam->getPosition();
+
+		pthread_mutex_lock(&caller->m_mutex);
+		caller->m_meshUpdated = caller->updateMesh(dPos, m_cam);
+		pthread_mutex_unlock(&caller->m_mutex);
+		lastTick = GetTickCount();
 	}
+
 }

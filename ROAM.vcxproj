@@ -37,16 +37,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\OgreSDK\boost;C:\OgreSDK\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\OgreSDK\boost;pthread/include;C:\OgreSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\OgreSDK\boost;C:\OgreSDK\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\OgreSDK\boost;pthread/include;C:\OgreSDK\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Antoine\Documents\Visual Studio 2010\Projects\ROAM\ROAM\pthread\libs;C:\OgreSDK\boost\lib;C:\OgreSDK\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,12 +55,12 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OIS_d.lib;%(AdditionalDependencies);pthreadVCE2.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -69,7 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OgreMain.lib;OIS.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OIS.lib;%(AdditionalDependencies);pthreadVCE2.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

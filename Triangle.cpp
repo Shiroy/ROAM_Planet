@@ -338,7 +338,20 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		edge *= (std::powf(val, 2)+4/std::powf(val+1,2));
 		//return 0;
-		return (edge.squaredLength()/distance.squaredLength()*1000) > 1;
+		return (edge.squaredLength()/distance.squaredLength()*800) > 1;
+
+		/*Ogre::Vector2 v2 = getScreenCoordinate(Ogre::Vector3(v[2].x, v[2].y, v[2].z), m_cam), v0 = getScreenCoordinate(Ogre::Vector3(v[0].x, v[0].y, v[0].z), m_cam);
+		
+		float sqL = (v2 - v0).length();
+		//std::cout << sqL << std::endl;
+		return sqL > 1000;*/
+}
+
+Ogre::Vector2 Triangle::getScreenCoordinate(Ogre::Vector3 vertex, Ogre::Camera *m_cam)
+{
+	Ogre::Vector4 transformedVector = Ogre::Vector4(vertex) * m_cam->getViewMatrix(true);
+	Ogre::Vector4 screenProjectedVector = transformedVector * m_cam->getProjectionMatrix();
+	return Ogre::Vector2(screenProjectedVector.x, screenProjectedVector.y);
 }
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)

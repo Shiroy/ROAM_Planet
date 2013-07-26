@@ -1,0 +1,16 @@
+material deep_space
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			texture_unit
+			{
+				cubic_texture deep_space_front5.png deep_space_back6.png deep_space_left2.png deep_space_right1.png deep_space_top3.png deep_space_bottom4.png separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}

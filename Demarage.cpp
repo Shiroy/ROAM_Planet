@@ -82,7 +82,7 @@ void Demarage::createCamera()
 	m_camera->setFarClipDistance(200000);
 	m_camera->setPosition(Ogre::Vector3(0, 0, -30000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+	//m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
 
 void Demarage::createViewport()
@@ -100,7 +100,7 @@ void Demarage::createScene()
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	obj->estimateVertexCount(50000);
-	m_planet = new Sphere(10000.0f, obj);
+	m_planet = new Sphere(10000.0f, obj, m_camera, m_node);
 
 	Ogre::Light *light = m_sceneMgr->createLight();
 	light->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -135,7 +135,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(!stopUpdate && (currenttick - lastUpdateTick) > 500)
 	{
 		lastUpdateTick = currenttick;
-		m_planet->updateMesh(m_node->getPosition() - m_camera->getPosition(), m_camera);
+		m_planet->renderIfUpdated();
 	}
 
 	//std::cout << "Distance : " <<(m_camera->getPosition() - m_node->getPosition()).length() << " (update : " << (stopUpdate == true ? "off" : "on") << ")" << std::endl;
@@ -164,10 +164,13 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_D))
 		deplacement.x += mouvement;
 
-	if(m_keyboard->isKeyDown(OIS::KC_U) && !updateKeyPressed)
+	if(m_keyboard->isKeyDown(OIS::KC_U))
 	{
-		stopUpdate = !stopUpdate;
-		updateKeyPressed = true;
+		if(!updateKeyPressed)
+		{
+			stopUpdate = !stopUpdate;
+			updateKeyPressed = true;
+		}
 	}
 	else
 		updateKeyPressed = false;

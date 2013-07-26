@@ -4,9 +4,8 @@ material cube
     {
         pass
         {
-            ambient 0.0 0.0 1.0
-            diffuse 1.0 1.0 1.0
-			scene_blend colour_blend
+            ambient 0.0 0.0 0.05 1.0
+            diffuse 0.0 0.0 0.5 1.0
         }
     }
 }

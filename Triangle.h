@@ -49,7 +49,9 @@ public:
 
 	int getRecurseLevel() {return m_recurseLevel;}
 
-private:	
+	static Ogre::Vector2 getScreenCoordinate(Ogre::Vector3, Ogre::Camera *m_cam);
+
+private:
 
 	Vertex v[3];
 

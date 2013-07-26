@@ -1,6 +1,7 @@
 #include "Diamond.h"
 #include "Triangle.h"
 #include <OGRE\OgreCamera.h>
+#include <OGRE\OgreVector2.h>
 #define NULL 0
 
 Diamond::Diamond(Triangle *t1, Triangle *t2, Triangle *t3, Triangle *t4)
@@ -77,12 +78,13 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 
 /*		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
 			return true;*/
-
+		
 		edge *= (std::powf(val, 2)+1/std::powf(val+1,2));
 		//edge *= 1/std::powf(val+1,8);
-		return (edge.squaredLength()/distance.squaredLength()*1000) < 1;
+		return (edge.squaredLength()/distance.squaredLength()*800) < 1;
 
-
+	/*Ogre::Vector2 vTri2 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[2].x, pTriComposed[0]->v[2].y, pTriComposed[0]->v[2].z), m_cam), vTri0 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[0].x, pTriComposed[0]->v[0].y, pTriComposed[0]->v[0].z), m_cam);
+	return (vTri2 - vTri0).length() < 200;*/
 
 	return false;
 }
