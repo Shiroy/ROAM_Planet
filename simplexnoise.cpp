@@ -477,11 +477,29 @@ float dot( const int* g, const float x, const float y, const float z, const floa
 
 /* Custom Planet Noise */
 
-float planetNoise(const float x, const float y, const float z)
+float planetNoise(float x, float y, float z)
 {
-	return	scaled_raw_noise_3d(-15, 20, x/4000, y/4000, z/4000)
-			+ scaled_raw_noise_3d(-15, 25, x/500, y/500, z/300)
-			+ scaled_raw_noise_3d(-8, 12, x/150, y/150, z/100)
-			+ scaled_raw_noise_3d(-6, 8, x/90, y/90, z/80)
-			+ scaled_raw_noise_3d(-1, 3, x/40, y/40, z/30);
+#define NB_OCTAVE 5
+#define PERSISTANCE 0.5f
+#define SCALE 2.5f
+#define PRE_SCALAR 25000.0f
+
+	x = (x + 100000)/PRE_SCALAR;
+	y = (y + 100000)/PRE_SCALAR;
+	z = (y + 100000)/PRE_SCALAR;
+
+	float noise = 0.0;
+	float weight = 1.0f;
+	for(int i = 0 ; i < NB_OCTAVE ; i++)
+	{
+		noise += weight * ((raw_noise_3d(x, y, z) + 1) * 0.5);
+		weight *= PERSISTANCE;
+		x *= SCALE;
+		y *= SCALE;
+		z *= SCALE;
+	}
+
+	noise /= NB_OCTAVE;
+
+	return -15 + ( noise * (1000 - (-15)));
 }

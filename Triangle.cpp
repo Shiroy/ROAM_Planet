@@ -110,10 +110,13 @@ int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
 	{
 		obj->position(v[0].x, v[0].y, v[0].z);
 		obj->normal(normal);
+		obj->colour(v[0].r, v[0].g, v[0].b);
 		obj->position(v[1].x, v[1].y, v[1].z);
 		obj->normal(normal);
+		obj->colour(v[1].r, v[1].g, v[1].b);
 		obj->position(v[2].x, v[2].y, v[2].z);
 		obj->normal(normal);
+		obj->colour(v[2].r, v[2].g, v[2].b);
 		nbTri++;
 		return nbRecurse;
 	}
@@ -135,7 +138,22 @@ void Triangle::split(float radius)
 
 	Ogre::Vector3 vMilieu(milieu.x, milieu.y, milieu.z);
 	vMilieu.normalise();
-	vMilieu *= radius + planetNoise(milieu.x, milieu.y, milieu.z);
+	float norme = radius + planetNoise(milieu.x, milieu.y, milieu.z);
+	vMilieu *= norme;
+
+	float altitude = norme - radius;
+	if(altitude < 200)
+	{
+		milieu.r = 0.0f;
+		milieu.g = 0.0f;
+		milieu.b = 0.5f;
+	}
+	else
+	{
+		milieu.r = 0.0f;
+		milieu.g = 0.5f;
+		milieu.b = 0.0f;
+	}
 
 	milieu.x = vMilieu.x;
 	milieu.y = vMilieu.y;
@@ -338,7 +356,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		edge *= (std::powf(val, 2)+4/std::powf(val+1,2));
 		//return 0;
-		return (edge.squaredLength()/distance.squaredLength()*800) > 1;
+		return (edge.squaredLength()/distance.squaredLength()*1500) > 1;
 
 		/*Ogre::Vector2 v2 = getScreenCoordinate(Ogre::Vector3(v[2].x, v[2].y, v[2].z), m_cam), v0 = getScreenCoordinate(Ogre::Vector3(v[0].x, v[0].y, v[0].z), m_cam);
 		

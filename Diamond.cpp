@@ -81,7 +81,7 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 		
 		edge *= (std::powf(val, 2)+1/std::powf(val+1,2));
 		//edge *= 1/std::powf(val+1,8);
-		return (edge.squaredLength()/distance.squaredLength()*800) < 1;
+		return (edge.squaredLength()/distance.squaredLength()*1500) < 1;
 
 	/*Ogre::Vector2 vTri2 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[2].x, pTriComposed[0]->v[2].y, pTriComposed[0]->v[2].z), m_cam), vTri0 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[0].x, pTriComposed[0]->v[0].y, pTriComposed[0]->v[0].z), m_cam);
 	return (vTri2 - vTri0).length() < 200;*/

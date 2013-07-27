@@ -110,17 +110,17 @@ void Sphere::renderIfUpdated()
 		pthread_mutex_lock(&m_mutex);
 		int nbTri = 0;
 		int recurseLevel = 1;
-		if(firstDraw)
+		/*if(firstDraw)
 		{
 			m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 			firstDraw = false;
 		}
 		else
-			m_obj->beginUpdate(0);
+			m_obj->beginUpdate(0);*/
 		render(m_obj, nbTri, recurseLevel);
-		m_obj->end();
+		//m_obj->end();
 
-		//std::cout << "nbTri : " << nbTri << " recursion : " << recurseLevel << " distance : " << dPos.length() << std::endl;
+		//std::cout << "nbTri : " << nbTri << std::endl;
 		m_meshUpdated = false;
 		pthread_mutex_unlock(&m_mutex);
 	}
@@ -128,11 +128,18 @@ void Sphere::renderIfUpdated()
 
 void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
-
 	for (int i=0 ; i<12 ; ++i) {
 		int recurse = 1;
+		if(firstDraw)
+			obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+		else
+			obj->beginUpdate(i);
 		nbRecurse = std::max(rootTriangle[i]->render(obj, nbTri, recurse), recurse);
+		obj->end();
 	}
+
+	if(firstDraw)
+		firstDraw = false;
 }
 
 bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)

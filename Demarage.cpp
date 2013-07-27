@@ -80,7 +80,7 @@ void Demarage::createCamera()
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(200000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -30000));
+	m_camera->setPosition(Ogre::Vector3(0, 0, -110000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	//m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -100,12 +100,12 @@ void Demarage::createScene()
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	obj->estimateVertexCount(50000);
-	m_planet = new Sphere(10000.0f, obj, m_camera, m_node);
+	m_planet = new Sphere(100000.0f, obj, m_camera, m_node);
 
 	Ogre::Light *light = m_sceneMgr->createLight();
-	light->setType(Ogre::Light::LT_DIRECTIONAL);
+	light->setType(Ogre::Light::LT_POINT);
 	light->setDiffuseColour(Ogre::ColourValue::White);
-	light->setDirection(Ogre::Vector3(0, -1, 0));
+	//light->setDirection(Ogre::Vector3(0, -1, 0));
 
 	m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-500000, 0, 0));
 	m_lightNode->attachObject(light);
@@ -195,7 +195,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	m_camera->yaw(mRotationY);
 	m_camera->pitch(mRotationX);
 	m_camera->moveRelative(deplacement);
-	//m_lightNode->setPosition(m_camera->getPosition());
+	m_lightNode->setPosition(m_camera->getPosition());
 
 	return true;
 }
