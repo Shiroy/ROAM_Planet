@@ -17,6 +17,7 @@
 
 
 #include <math.h>
+#include <iostream>
 
 #include "simplexnoise.h"
 
@@ -479,10 +480,10 @@ float dot( const int* g, const float x, const float y, const float z, const floa
 
 float planetNoise(float x, float y, float z)
 {
-#define NB_OCTAVE 5
-#define PERSISTANCE 0.5f
-#define SCALE 2.5f
-#define PRE_SCALAR 25000.0f
+#define NB_OCTAVE 16
+#define PERSISTANCE 0.2f
+#define SCALE 3.0f
+#define PRE_SCALAR 100000.0f
 
 	x = (x + 100000)/PRE_SCALAR;
 	y = (y + 100000)/PRE_SCALAR;
@@ -499,7 +500,7 @@ float planetNoise(float x, float y, float z)
 		z *= SCALE;
 	}
 
-	noise /= NB_OCTAVE;
+	//std::cout << "Noise : " << noise << std::endl;
 
-	return -15 + ( noise * (1000 - (-15)));
+	return -2000 + ( noise * 5000);
 }

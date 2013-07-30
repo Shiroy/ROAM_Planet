@@ -142,11 +142,23 @@ void Triangle::split(float radius)
 	vMilieu *= norme;
 
 	float altitude = norme - radius;
-	if(altitude < 200)
+	if(altitude < 600)
 	{
 		milieu.r = 0.0f;
 		milieu.g = 0.0f;
 		milieu.b = 0.5f;
+	}
+	else if(altitude > 2500)
+	{
+		milieu.r = 0.36f;
+		milieu.g = 0.18f;
+		milieu.b = 0.12f;
+	}
+	else if(altitude > 3500)
+	{
+		milieu.r = 1.0f;
+		milieu.g = 1.0f;
+		milieu.b = 1.0f;
 	}
 	else
 	{

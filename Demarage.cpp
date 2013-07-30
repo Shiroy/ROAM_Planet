@@ -79,8 +79,8 @@ void Demarage::createCamera()
 {
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
-	m_camera->setFarClipDistance(200000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -110000));
+	m_camera->setFarClipDistance(2000000);
+	m_camera->setPosition(Ogre::Vector3(0, 0, -1100000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	//m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -100,12 +100,12 @@ void Demarage::createScene()
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	obj->estimateVertexCount(50000);
-	m_planet = new Sphere(100000.0f, obj, m_camera, m_node);
+	m_planet = new Sphere(1000000.0f, obj, m_camera, m_node);
 
 	Ogre::Light *light = m_sceneMgr->createLight();
-	light->setType(Ogre::Light::LT_POINT);
+	light->setType(Ogre::Light::LT_DIRECTIONAL);
 	light->setDiffuseColour(Ogre::ColourValue::White);
-	//light->setDirection(Ogre::Vector3(0, -1, 0));
+	light->setDirection(Ogre::Vector3(0, -1, 0));
 
 	m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-500000, 0, 0));
 	m_lightNode->attachObject(light);
@@ -143,14 +143,14 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
 
-	Ogre::Real vitesse = 1000.0f;
+	Ogre::Real vitesse = 10000.0f;
 	Ogre::Real vitesseRot = 0.01f;
 
 	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
 	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 10000.f; // rayon
 	Ogre::Real atmosphericDrag = 1.f;
-	if (altitude && altitude < 1000.f)
-		atmosphericDrag = altitude / 1000.f;
+	if (altitude && altitude < 10000.f)
+		atmosphericDrag = std::max(altitude / 10000.0f, 0.01f);
 
 	Ogre::Real mouvement = vitesse * atmosphericDrag * e.timeSinceLastFrame;
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
@@ -195,7 +195,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	m_camera->yaw(mRotationY);
 	m_camera->pitch(mRotationX);
 	m_camera->moveRelative(deplacement);
-	m_lightNode->setPosition(m_camera->getPosition());
+	//m_lightNode->setPosition(m_camera->getPosition());
 
 	return true;
 }
