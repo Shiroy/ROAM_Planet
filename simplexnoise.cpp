@@ -480,14 +480,14 @@ float dot( const int* g, const float x, const float y, const float z, const floa
 
 float planetNoise(float x, float y, float z)
 {
-#define NB_OCTAVE 16
+/*#define NB_OCTAVE 16
 #define PERSISTANCE 0.2f
 #define SCALE 3.0f
 #define PRE_SCALAR 100000.0f
 
 	x = (x + 100000)/PRE_SCALAR;
 	y = (y + 100000)/PRE_SCALAR;
-	z = (y + 100000)/PRE_SCALAR;
+	z = (z + 100000)/PRE_SCALAR;
 
 	float noise = 0.0;
 	float weight = 1.0f;
@@ -498,9 +498,19 @@ float planetNoise(float x, float y, float z)
 		x *= SCALE;
 		y *= SCALE;
 		z *= SCALE;
-	}
+	}*/
+
+	#define PRE_SCALAR 100000.0f
+
+	x = (x + PRE_SCALAR)/PRE_SCALAR;
+	y = (y + PRE_SCALAR)/PRE_SCALAR;
+	z = (z + PRE_SCALAR)/PRE_SCALAR;
+	float noise, noise2 = 0;
+
+	noise = scaled_raw_noise_3d(0, 1, x, y, z);
+	noise2 = pow(scaled_raw_noise_3d(0, 1, x*2+1034, y*2+837, z*2+103),15);
 
 	//std::cout << "Noise : " << noise << std::endl;
 
-	return -2000 + ( noise * 5000);
+	return -500 + ( noise * 700) + noise2*5000;
 }
