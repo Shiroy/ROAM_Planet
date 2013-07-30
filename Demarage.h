@@ -1,5 +1,6 @@
 #pragma once
 #include "Sphere.h"
+#include "Planet.h"
 #include <OGRE\OgreCamera.h>
 #include <OGRE\OgreSceneManager.h>
 #include <OGRE\OgreRenderWindow.h>
@@ -44,7 +45,7 @@ private:
 	Ogre::RenderWindow *m_window;
 	Ogre::Camera *m_camera;
 	Ogre::Viewport *m_viewport;
-	Ogre::SceneNode *m_node;
+	Ogre::SceneNode *m_node, *m_node2;
 	Ogre::SceneNode * m_lightNode;
 
 	OIS::InputManager *m_inputManager;
@@ -52,7 +53,7 @@ private:
 	OIS::Mouse *m_mouse;
 	OIS::Keyboard *m_keyboard;
 
-	Sphere *m_planet;
+	Planet *m_planet, *m_planet2;
 
 	bool updateKeyPressed;
 	bool stopUpdate;

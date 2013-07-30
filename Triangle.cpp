@@ -122,13 +122,13 @@ int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
 	}
 }
 
-void Triangle::split(float radius)
+void Triangle::split(float radius, PlanetNoise *pnoise)
 {
 	if(enfant[0] || enfant[1])
 		return;
 
 	if(voisin[1]->getVoisin(1) != this)
-		voisin[1]->split(radius);
+		voisin[1]->split(radius, pnoise);
 
 	Vertex milieu;
 
@@ -138,7 +138,7 @@ void Triangle::split(float radius)
 
 	Ogre::Vector3 vMilieu(milieu.x, milieu.y, milieu.z);
 	vMilieu.normalise();
-	float norme = radius + planetNoise(milieu.x, milieu.y, milieu.z);
+	float norme = radius + pnoise->noise(milieu.x, milieu.y, milieu.z);
 	vMilieu *= norme;
 
 	float altitude = norme - radius;
@@ -384,20 +384,20 @@ Ogre::Vector2 Triangle::getScreenCoordinate(Ogre::Vector3 vertex, Ogre::Camera *
 	return Ogre::Vector2(screenProjectedVector.x, screenProjectedVector.y);
 }
 
-void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam)
+void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam, PlanetNoise *pnoise)
 {
 	if(enfant[0] || enfant[1])
 	{
 		if(enfant[0])
-			enfant[0]->splitIfNeeded(dPos, radius, meshUpdated, m_cam);
+			enfant[0]->splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
 		if(enfant[1])
-			enfant[1]->splitIfNeeded(dPos, radius, meshUpdated, m_cam);
+			enfant[1]->splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
 	}
 	else
 	{
 			meshUpdated = true;
 		if (needsSplit(dPos, meshUpdated, m_cam)) {
-			split(radius);
+			split(radius, pnoise);
 			//splitIfNeeded(dPos, radius, meshUpdated, m_cam);
 		}
 	}

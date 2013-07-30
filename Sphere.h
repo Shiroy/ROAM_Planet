@@ -5,6 +5,7 @@ class Triangle;
 #include <OGRE\OgreSceneNode.h>
 #include <list>
 #include "pthread\include\pthread.h"
+#include "PlanetNoise.h"
 class Diamond;
 
 namespace Ogre
@@ -17,7 +18,7 @@ namespace Ogre
 class Sphere
 {
 public:
-	Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node);
+	Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node, PlanetNoise *pnoise);
 	~Sphere(void);
 
 	bool updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam); //dPos vecteur position entre le cente de la camera et le mesh
@@ -39,6 +40,7 @@ private:
 	std::vector<Diamond*> m_diamondList;
 	bool firstDraw;	
 	pthread_t m_thread;
+	PlanetNoise *m_pnoise;
 };
 
 struct updateThreadArg

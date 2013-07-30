@@ -5,7 +5,7 @@
 
 #define NORM Ogre::Math::Sqrt(3) * m_radius
 
-Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node) : m_radius(radius)
+Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node, PlanetNoise *pnoise) : m_radius(radius), m_pnoise(pnoise)
 {
 	m_diamondList.clear();
 	m_obj = obj;
@@ -83,7 +83,7 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::S
 	
 	for(int i = 0 ; i < 0 ; i++)
 	{
-		t->split(m_radius);
+		t->split(m_radius, pnoise);
 		t = t->getEnfant(0);
 	}
 
@@ -146,7 +146,7 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 {
 	bool meshUpdated = false;
 	for(int i = 0 ; i < 12 ; i++)
-		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam);
+		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam, m_pnoise);
 
 	//std::cout << "Diamond : " << m_diamondList.size() << " ";
 

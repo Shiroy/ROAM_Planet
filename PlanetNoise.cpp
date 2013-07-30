@@ -1,5 +1,8 @@
 #include "PlanetNoise.h"
+#include "simplexnoise.h"
+#include <cmath>
 #include <cstdlib>
+#include <ctime>
 
 
 PlanetNoise::PlanetNoise(int seed)
@@ -13,8 +16,19 @@ PlanetNoise::~PlanetNoise(void)
 
 float PlanetNoise::noise(float x, float y, float z)
 {
-	// Remember tu use the surcharged simplex noise function with custom_perm
-	return 0.f;
+	#define PRE_SCALAR 100000.0f
+
+	x = (x + PRE_SCALAR)/PRE_SCALAR;
+	y = (y + PRE_SCALAR)/PRE_SCALAR;
+	z = (z + PRE_SCALAR)/PRE_SCALAR;
+	float noise, noise2 = 0;
+
+	noise = scaled_raw_noise_3d(0, 1, x, y, z, m_perm);
+	noise2 = pow(scaled_raw_noise_3d(0, 1, x*2+1034.f, y*2+837.f, z*2+103.f, m_perm),15);
+
+	//std::cout << "Noise : " << noise << std::endl;
+
+	return -500.f + ( noise * 700.f) + noise2*5000.f;
 }
 
 void PlanetNoise::setSeed(int seed)
@@ -41,4 +55,9 @@ void PlanetNoise::setSeed(int seed)
 	}
 
 	// Initialize here some other random variables that you need
+
+
+
+	// Reset rand seed
+	srand(time(NULL));
 }

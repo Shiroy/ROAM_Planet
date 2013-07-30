@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PlanetNoise.h"
 #include "Diamond.h"
 #include <OGRE\OgreVector3.h>
 
@@ -35,8 +36,8 @@ public:
 
 	int render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse);
 
-	void split(float radius);
-	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam);
+	void split(float radius, PlanetNoise *pnoise);
+	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam, PlanetNoise *pnoise);
 	bool needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam);
 	void merge();
 
