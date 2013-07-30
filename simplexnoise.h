@@ -59,13 +59,6 @@ float octave_noise_3d(const float octaves,
                     const float x,
                     const float y,
                     const float z);
-float octave_noise_4d(const float octaves,
-                    const float persistence,
-                    const float scale,
-                    const float x,
-                    const float y,
-                    const float z,
-                    const float w);
 
 
 // Scaled Multi-octave Simplex noise
@@ -85,15 +78,6 @@ float scaled_octave_noise_3d(  const float octaves,
                             const float x,
                             const float y,
                             const float z);
-float scaled_octave_noise_4d(  const float octaves,
-                            const float persistence,
-                            const float scale,
-                            const float loBound,
-                            const float hiBound,
-                            const float x,
-                            const float y,
-                            const float z,
-                            const float w);
 
 // Scaled Raw Simplex noise
 // The result will be between the two parameters passed.
@@ -106,25 +90,24 @@ float scaled_raw_noise_3d( const float loBound,
                         const float x,
                         const float y,
                         const float z);
-float scaled_raw_noise_4d( const float loBound,
+float scaled_raw_noise_3d( const float loBound,
                         const float hiBound,
                         const float x,
                         const float y,
                         const float z,
-                        const float w);
+						int *custom_perm);
 
 
 // Raw Simplex noise - a single noise value.
 float raw_noise_2d(const float x, const float y);
 float raw_noise_3d(const float x, const float y, const float z);
-float raw_noise_4d(const float x, const float y, const float, const float w);
+float raw_noise_3d( const float x, const float y, const float z , int *custom_perm);
 
 
 int fastfloor(const float x);
 
 float dot(const int* g, const float x, const float y);
 float dot(const int* g, const float x, const float y, const float z);
-float dot(const int* g, const float x, const float y, const float z, const float w);
 
 
 // The gradients are the midpoints of the vertices of a cube.
@@ -132,19 +115,6 @@ static const int grad3[12][3] = {
     {1,1,0}, {-1,1,0}, {1,-1,0}, {-1,-1,0},
     {1,0,1}, {-1,0,1}, {1,0,-1}, {-1,0,-1},
     {0,1,1}, {0,-1,1}, {0,1,-1}, {0,-1,-1}
-};
-
-
-// The gradients are the midpoints of the vertices of a hypercube.
-static const int grad4[32][4]= {
-    {0,1,1,1},  {0,1,1,-1},  {0,1,-1,1},  {0,1,-1,-1},
-    {0,-1,1,1}, {0,-1,1,-1}, {0,-1,-1,1}, {0,-1,-1,-1},
-    {1,0,1,1},  {1,0,1,-1},  {1,0,-1,1},  {1,0,-1,-1},
-    {-1,0,1,1}, {-1,0,1,-1}, {-1,0,-1,1}, {-1,0,-1,-1},
-    {1,1,0,1},  {1,1,0,-1},  {1,-1,0,1},  {1,-1,0,-1},
-    {-1,1,0,1}, {-1,1,0,-1}, {-1,-1,0,1}, {-1,-1,0,-1},
-    {1,1,1,0},  {1,1,-1,0},  {1,-1,1,0},  {1,-1,-1,0},
-    {-1,1,1,0}, {-1,1,-1,0}, {-1,-1,1,0}, {-1,-1,-1,0}
 };
 
 
@@ -175,19 +145,6 @@ static const int perm[512] = {
     228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,
     107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,
     138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
-};
-
-
-// A lookup table to traverse the simplex around a given point in 4D.
-static const int simplex[64][4] = {
-    {0,1,2,3},{0,1,3,2},{0,0,0,0},{0,2,3,1},{0,0,0,0},{0,0,0,0},{0,0,0,0},{1,2,3,0},
-    {0,2,1,3},{0,0,0,0},{0,3,1,2},{0,3,2,1},{0,0,0,0},{0,0,0,0},{0,0,0,0},{1,3,2,0},
-    {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-    {1,2,0,3},{0,0,0,0},{1,3,0,2},{0,0,0,0},{0,0,0,0},{0,0,0,0},{2,3,0,1},{2,3,1,0},
-    {1,0,2,3},{1,0,3,2},{0,0,0,0},{0,0,0,0},{0,0,0,0},{2,0,3,1},{0,0,0,0},{2,1,3,0},
-    {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
-    {2,0,1,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,0,1,2},{3,0,2,1},{0,0,0,0},{3,1,2,0},
-    {2,1,0,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,1,0,2},{0,0,0,0},{3,2,0,1},{3,2,1,0}
 };
 
 

@@ -76,14 +76,18 @@
     <ClCompile Include="Demarage.cpp" />
     <ClCompile Include="Diamond.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="simplexnoise.cpp" />
+    <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="PlanetNoise.cpp" />
+    <ClCompile Include="Simplexnoise.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demarage.h" />
     <ClInclude Include="Diamond.h" />
-    <ClInclude Include="simplexnoise.h" />
+    <ClInclude Include="Planet.h" />
+    <ClInclude Include="PlanetNoise.h" />
+    <ClInclude Include="Simplexnoise.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
