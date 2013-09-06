@@ -53,8 +53,8 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 	if(pTriComposed[0]->parent == NULL) //Root triangle
 		return false;
 
-	if(!isDiamondVisible(m_cam))
-		return true;
+	/*if(!isDiamondVisible(m_cam))
+		return true;*/
 
 	Vertex center = pTriComposed[0]->v[1];
 		Ogre::Vector3 milieu;
