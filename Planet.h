@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OGRE\Ogre.h>
+#include <OGRE/Ogre.h>
 #include "PlanetNoise.h"
 #include "Sphere.h"
 

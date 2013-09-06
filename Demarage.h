@@ -1,13 +1,17 @@
 #pragma once
 #include "Sphere.h"
 #include "Planet.h"
-#include <OGRE\OgreCamera.h>
-#include <OGRE\OgreSceneManager.h>
-#include <OGRE\OgreRenderWindow.h>
-#include <OGRE\OgreViewport.h>
-#include <OGRE\OgreRoot.h>
-#include <OGRE\OgreWindowEventUtilities.h>
-#include <OIS\OIS.h>
+#include <OGRE/OgreCamera.h>
+#include <OGRE/OgreSceneManager.h>
+#include <OGRE/OgreRenderWindow.h>
+#include <OGRE/OgreViewport.h>
+#include <OGRE/OgreRoot.h>
+#include <OGRE/OgreWindowEventUtilities.h>
+#include <OIS/OIS.h>
+#ifdef __linux__
+#include <boost/timer.hpp>
+#endif
+
 
 class Demarage : public Ogre::FrameListener, public Ogre::WindowEventListener/*, public OIS::KeyListener, public OIS::MouseListener*/
 {

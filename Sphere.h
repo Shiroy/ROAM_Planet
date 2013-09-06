@@ -1,10 +1,15 @@
 #pragma once
 class Triangle;
-#include <OGRE\OgreVector3.h>
-#include <OGRE\OgreManualObject.h>
-#include <OGRE\OgreSceneNode.h>
+#include <OGRE/OgreVector3.h>
+#include <OGRE/OgreManualObject.h>
+#include <OGRE/OgreSceneNode.h>
 #include <list>
-#include "pthread\include\pthread.h"
+#ifdef __linux__
+#include <pthread.h>
+#include <boost/timer.hpp>
+#else
+#include "pthread/include/pthread.h"
+#endif
 #include "PlanetNoise.h"
 class Diamond;
 
@@ -28,6 +33,8 @@ public:
 	Triangle* getRootTriangle(int tri) {return rootTriangle[tri];}
 
 	static void *updateThread(void *arg);
+	Ogre::Camera *getCamera() {return m_camera;}
+	float getRadius() {return m_radius;}	
 
 	bool m_meshUpdated;
 	pthread_mutex_t m_mutex;

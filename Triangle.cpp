@@ -1,7 +1,7 @@
 #include "Triangle.h"
 #include "simplexnoise.h"
-#include <OGRE\OgreManualObject.h>
-#include <OGRE\OgreCamera.h>
+#include <OGRE/OgreManualObject.h>
+#include <OGRE/OgreCamera.h>
 
 Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP)
 {
@@ -142,7 +142,7 @@ void Triangle::split(float radius, PlanetNoise *pnoise)
 	vMilieu *= norme;
 
 	float altitude = norme - radius;
-	if(altitude < 0)
+	/*if(altitude < 0)
 	{
 		milieu.r = 0.0f;
 		milieu.g = 0.0f;
@@ -160,7 +160,7 @@ void Triangle::split(float radius, PlanetNoise *pnoise)
 		milieu.g = 0.18f;
 		milieu.b = 0.12f;
 	}
-	else
+	else*/
 	{
 		milieu.r = 1.0f;
 		milieu.g = 1.0f;
@@ -366,7 +366,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		//if (val > 0.9)
 		//	std::cout << val << std::endl;
 
-		edge *= (std::powf(val, 2)+4/std::powf(val+1,2));
+		edge *= (std::pow(val, 2)+4/std::pow(val+1,2));
 		//return 0;
 		return (edge.squaredLength()/distance.squaredLength()*1500) > 1;
 
@@ -398,7 +398,7 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 			meshUpdated = true;
 		if (needsSplit(dPos, meshUpdated, m_cam)) {
 			split(radius, pnoise);
-			//splitIfNeeded(dPos, radius, meshUpdated, m_cam);
+			//splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
 		}
 	}
 }

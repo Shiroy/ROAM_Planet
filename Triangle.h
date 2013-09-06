@@ -2,7 +2,7 @@
 
 #include "PlanetNoise.h"
 #include "Diamond.h"
-#include <OGRE\OgreVector3.h>
+#include <OGRE/OgreVector3.h>
 
 struct Vertex
 {
@@ -20,8 +20,8 @@ class Triangle
 {
 	friend class Diamond;
 public:
-	Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *parent, int recurseLevel, std::vector<Diamond*> *diamondList);
-	Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *parent, int recurseLevel, std::vector<Diamond*> *diamondList);
+	Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *parent, int recurseLevel, std::vector<Diamond*> *diamondList, Sphere *planet);
+	Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *parent, int recurseLevel, std::vector<Diamond*> *diamondList, Sphere *planet);
 	~Triangle(void);
 
 	void calculateNormal();
@@ -52,6 +52,8 @@ public:
 	int getRecurseLevel() {return m_recurseLevel;}
 
 	static Ogre::Vector2 getScreenCoordinate(Ogre::Vector3, Ogre::Camera *m_cam);
+	
+	Sphere *m_planet;
 
 private:
 

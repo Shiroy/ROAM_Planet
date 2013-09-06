@@ -1,6 +1,6 @@
 #include "Demarage.h"
 #include "Triangle.h"
-#include <OGRE\Ogre.h>
+#include <OGRE/Ogre.h>
 
 Demarage::Demarage(void)
 {
@@ -81,7 +81,7 @@ void Demarage::createCamera()
 	m_camera->setFarClipDistance(13000000);
 	m_camera->setPosition(Ogre::Vector3(0, 0, -1100000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-	//m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
 
 void Demarage::createViewport()
@@ -98,16 +98,16 @@ void Demarage::createScene()
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	obj->estimateVertexCount(50000);
-	m_planet = new Planet(123123, obj, m_camera, m_node);
+	m_planet = new Planet(1000000, obj, m_camera, m_node);
 	m_node->attachObject(obj);
 
-	m_node2 = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode2");
+	/*m_node2 = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode2");
 	m_node2->setPosition(10000000,3000000,0);
 	Ogre::ManualObject *obj2 = m_sceneMgr->createManualObject("cube2");
 	obj2->setDynamic(true);
 	obj2->estimateVertexCount(50000);
 	m_planet2 = new Planet(456456, obj2, m_camera, m_node2);
-	m_node2->attachObject(obj2);
+	m_node2->attachObject(obj2);*/
 
 	Ogre::Light *light = m_sceneMgr->createLight();
 	light->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -129,8 +129,11 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 
 	m_keyboard->capture();
 	m_mouse->capture();
-
+#ifdef __linux__
+	currenttick = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 	currenttick = GetTickCount();
+#endif
 	if((currenttick - lastfpstick) > 1000)
 	{
 		std::cout << "FPS : " << m_window->getAverageFPS() << std::endl;
@@ -141,7 +144,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	{
 		lastUpdateTick = currenttick;
 		m_planet->renderIfUpdated();
-		m_planet2->renderIfUpdated();
+		//m_planet2->renderIfUpdated();
 	}
 
 	//std::cout << "Distance : " <<(m_camera->getPosition() - m_node->getPosition()).length() << " (update : " << (stopUpdate == true ? "off" : "on") << ")" << std::endl;
@@ -156,7 +159,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 1000000.f; // rayon
 	Ogre::Real atmosphericDrag = 1.f;
 	if (altitude && altitude < 10000.f)
-		atmosphericDrag = std::max(altitude / 1000000.0f, 0.01f);
+		atmosphericDrag = std::max(altitude / 1000000.0f, 0.1f);
 
 	Ogre::Real mouvement = vitesse * atmosphericDrag * e.timeSinceLastFrame;
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;

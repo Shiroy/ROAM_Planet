@@ -1,6 +1,6 @@
 #include "Sphere.h"
 #include "Triangle.h"
-#include <OGRE\OgreCamera.h>
+#include <OGRE/OgreCamera.h>
 #include <math.h>
 
 #define NORM Ogre::Math::Sqrt(3) * m_radius
@@ -149,8 +149,11 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam, m_pnoise);
 
 	//std::cout << "Diamond : " << m_diamondList.size() << " ";
-
+#ifdef __linux__
+	int tick = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 	int tick = GetTickCount();
+#endif
 	int newTick = 0;
 
 	for(int i = 0 ; i != m_diamondList.size() ; ++i)
@@ -168,7 +171,11 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 			i--;
 		}
 	}
+	#ifdef __linux__
+	newTick = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 	newTick = GetTickCount();
+#endif
 	//std::cout << "Extracting object done (diff : " << newTick - tick << ")" << std::endl;
 	tick = newTick;
 
@@ -181,13 +188,20 @@ void *Sphere::updateThread(void *arg)
 	Sphere *caller = tArg->thisPointer;
 	Ogre::Camera *m_cam = tArg->m_cam;
 	delete tArg;
-
+#ifdef __linux__
+	int tickCount = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 	int tickCount = GetTickCount(); //update timer
+#endif
 	int lastTick = 0;
 
 	while(true)
 	{
+#ifdef __linux__
+		tickCount = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 		tickCount = GetTickCount();
+#endif
 		if(tickCount - lastTick < 250)
 			continue;
 
@@ -196,7 +210,11 @@ void *Sphere::updateThread(void *arg)
 		pthread_mutex_lock(&caller->m_mutex);
 		caller->m_meshUpdated = caller->updateMesh(dPos, m_cam);
 		pthread_mutex_unlock(&caller->m_mutex);
+#ifdef __linux__
+		lastTick = clock() / (CLOCKS_PER_SEC / 1000);
+#else
 		lastTick = GetTickCount();
+#endif
 	}
 
 }
