@@ -4,7 +4,7 @@
 Planet::Planet(int seed, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node) : m_seed(seed)
 {
 	m_pnoise = new PlanetNoise(seed);
-	m_sphere = new Sphere(1000000.0f, obj, cam, node, m_pnoise);
+	m_sphere = new Sphere(10000.0f, obj, cam, node, m_pnoise);
 }
 
 

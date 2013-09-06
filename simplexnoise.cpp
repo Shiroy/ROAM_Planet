@@ -431,16 +431,19 @@ float planetNoise(float x, float y, float z)
 	}*/
 
 	#define PRE_SCALAR 100000.0f
-
+#define MIN_HEIGHT -100.0f
+#define MAX_HEIGHT 5000.0f
 	x = (x + PRE_SCALAR)/PRE_SCALAR;
 	y = (y + PRE_SCALAR)/PRE_SCALAR;
 	z = (z + PRE_SCALAR)/PRE_SCALAR;
 	float noise, noise2 = 0;
 
 	noise = scaled_raw_noise_3d(0, 1, x, y, z);
-	noise2 = pow(scaled_raw_noise_3d(0, 1, x*2+1034, y*2+837, z*2+103),15);
+	noise2 = scaled_raw_noise_3d(0, 1, x*1.3+1034, y*1.3+837, z*1.3+103);
+	if (noise2 < 0.90) noise2 = 0;
+	else if (noise2 < 0.98) noise2 = 0+1*pow((noise2-0.90)*10,2);
+	else noise2 = 0.98+0.02*(1-pow((noise2-0.98)*50-1,2));
 
-	//std::cout << "Noise : " << noise << std::endl;
 
-	return -500 + ( noise * 700) + noise2*5000;
+	return MIN_HEIGHT + noise * (-MIN_HEIGHT+100) + noise2*(-MIN_HEIGHT+5000);
 }
