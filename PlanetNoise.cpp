@@ -28,6 +28,7 @@ float PlanetNoise::noise(float x, float y, float z)
 
 	//std::cout << "Noise : " << noise << std::endl;
 
+	return 0.f;
 	return -500.f + ( noise * 700.f) + noise2*5000.f;
 }
 

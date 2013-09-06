@@ -333,14 +333,16 @@ void Triangle::merge()
 }
 
 bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {		
+		
+		Ogre::Vector3 camPos = m_cam->getPosition();
+		camPos.normalise();
+		
+		float cosHorizon = 10000.0f/m_cam->getPosition().length();
 
-		float val  = m_cam->getDirection().dotProduct(-normal);
+		float val  = camPos.dotProduct(normal) - cosHorizon;
 
-		if(m_recurseLevel < 9)
-			return true;
-
-		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
-			return false;		
+		if(val < 0) // le triangle est cache car il est sur l'autre face de la planete
+			return false;
 
 		Ogre::Vector3 milieu;
 		milieu.x = (v[2].x + v[0].x) / 2;
@@ -350,8 +352,8 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		float distance_value = distance.length();
 
-		/*if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)) && distance_value > 150.0f)
-			return false;*/
+		//if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)) && distance_value > 150.0f)
+		//	return false; //Le triangle est hors champ
 
 		Ogre::Vector3 edge;
 		edge.x = v[2].x - v[0].x;
@@ -360,15 +362,8 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		if (edge.squaredLength() < 1)  return false;
 
-		//std::cout << edge.length()/distance.length()*100 << std::endl;
-
-		
-		//if (val > 0.9)
-		//	std::cout << val << std::endl;
-
-		edge *= (std::pow(val, 2)+4/std::pow(val+1,2));
-		//return 0;
-		return (edge.squaredLength()/distance.squaredLength()*1500) > 1;
+		edge *= (/*std::powf(val, 2)+*/4/std::powf(val+1,2));
+		return (edge.squaredLength()/distance.squaredLength()*15) > 1;
 
 		/*Ogre::Vector2 v2 = getScreenCoordinate(Ogre::Vector3(v[2].x, v[2].y, v[2].z), m_cam), v0 = getScreenCoordinate(Ogre::Vector3(v[0].x, v[0].y, v[0].z), m_cam);
 		
@@ -398,11 +393,10 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 			meshUpdated = true;
 		if (needsSplit(dPos, meshUpdated, m_cam)) {
 			split(radius, pnoise);
-			//splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
+			splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
 		}
 	}
 }
-
 
 float Triangle::error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius)
 {

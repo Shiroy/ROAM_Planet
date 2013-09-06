@@ -47,8 +47,8 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 	if(removed)
 		return false;
 
-	if(pTriComposed[0]->m_recurseLevel <= 9)
-		return false;
+	/*if(pTriComposed[0]->m_recurseLevel <= 9)
+		return false;*/
 
 	if(pTriComposed[0]->parent == NULL) //Root triangle
 		return false;
@@ -74,14 +74,15 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 		Ogre::Vector3 normal = v1.crossProduct(v2);
 		normal.normalise();
 
-		float val  = m_cam->getDirection().dotProduct(-normal);
+		Ogre::Vector3 camPos = m_cam->getPosition();
+		camPos.normalise();
+		float val  = camPos.dotProduct(normal);
 
-/*		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
-			return true;*/
+		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
+			return true;
 		
-		edge *= (std::pow(val, 2)+1/std::pow(val+1,2));
-		//edge *= 1/std::powf(val+1,8);
-		return (edge.squaredLength()/distance.squaredLength()*1500) < 1;
+		edge *= (std::powf(val, 2)+1/std::powf(val+1,2));
+		return (edge.squaredLength()/distance.squaredLength()*15) < 1;
 
 	/*Ogre::Vector2 vTri2 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[2].x, pTriComposed[0]->v[2].y, pTriComposed[0]->v[2].z), m_cam), vTri0 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[0].x, pTriComposed[0]->v[0].y, pTriComposed[0]->v[0].z), m_cam);
 	return (vTri2 - vTri0).length() < 200;*/

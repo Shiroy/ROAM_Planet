@@ -79,7 +79,7 @@ void Demarage::createCamera()
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(13000000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -1100000));
+	m_camera->setPosition(Ogre::Vector3(0, 0, -20000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -156,10 +156,10 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	Ogre::Real vitesseRot = 0.005f;
 
 	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
-	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 1000000.f; // rayon
+	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 10000.f; // rayon
 	Ogre::Real atmosphericDrag = 1.f;
 	if (altitude && altitude < 10000.f)
-		atmosphericDrag = std::max(altitude / 1000000.0f, 0.1f);
+		atmosphericDrag = std::max(altitude / 10000.0f, 0.01f);
 
 	Ogre::Real mouvement = vitesse * atmosphericDrag * e.timeSinceLastFrame;
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
