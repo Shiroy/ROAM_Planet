@@ -73,23 +73,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Demarage.cpp" />
-    <ClCompile Include="Diamond.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Planet.cpp" />
-    <ClCompile Include="PlanetNoise.cpp" />
-    <ClCompile Include="Simplexnoise.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="src/Demarage.cpp" />
+    <ClCompile Include="src/Diamond.cpp" />
+    <ClCompile Include="src/main.cpp" />
+    <ClCompile Include="src/Planet.cpp" />
+    <ClCompile Include="src/PlanetNoise.cpp" />
+    <ClCompile Include="src/Simplexnoise.cpp" />
+    <ClCompile Include="src/Sphere.cpp" />
+    <ClCompile Include="src/Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demarage.h" />
-    <ClInclude Include="Diamond.h" />
-    <ClInclude Include="Planet.h" />
-    <ClInclude Include="PlanetNoise.h" />
-    <ClInclude Include="Simplexnoise.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Triangle.h" />
+    <ClInclude Include="src/Demarage.h" />
+    <ClInclude Include="src/Diamond.h" />
+    <ClInclude Include="src/Planet.h" />
+    <ClInclude Include="src/PlanetNoise.h" />
+    <ClInclude Include="src/Simplexnoise.h" />
+    <ClInclude Include="src/Sphere.h" />
+    <ClInclude Include="src/Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

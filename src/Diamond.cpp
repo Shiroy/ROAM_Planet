@@ -81,7 +81,7 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
 			return true;
 		
-		edge *= (std::powf(val, 2)+1/std::powf(val+1,2));
+        edge *= (std::pow(val, 2)+1/std::pow(val+1,2));
 		return (edge.squaredLength()/distance.squaredLength()*15) < 1;
 
 	/*Ogre::Vector2 vTri2 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[2].x, pTriComposed[0]->v[2].y, pTriComposed[0]->v[2].z), m_cam), vTri0 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[0].x, pTriComposed[0]->v[0].y, pTriComposed[0]->v[0].z), m_cam);

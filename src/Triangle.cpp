@@ -1,9 +1,10 @@
 #include "Triangle.h"
 #include "simplexnoise.h"
+#include "Sphere.h"
 #include <OGRE/OgreManualObject.h>
 #include <OGRE/OgreCamera.h>
 
-Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP)
+Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP, Sphere *plnt)
 {
 	v[0] = v1;
 	v[1] = v2;
@@ -15,10 +16,11 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLeve
 	diamond = NULL;
 	diamondList = diamondListP;
 	m_recurseLevel = recurseLevel;
+    m_planet = plnt;
 	calculateNormal();
 }
 
-Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP)
+Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP, Sphere *plnt)
 {
 	v[0].x = x1;
 	v[0].y = y1;
@@ -49,6 +51,7 @@ Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, f
 	enfant[1] = NULL;
 	diamond = NULL;
 	diamondList = diamondListP;
+    m_planet = plnt;
 	m_recurseLevel = recurseLevel;
 	calculateNormal();
 }
@@ -175,16 +178,16 @@ void Triangle::split(float radius, PlanetNoise *pnoise)
 	milieu.ny = v[0].ny;
 	milieu.nz = v[0].nz;
 
-	Triangle *enfant1 = new Triangle(v[1], milieu, v[0], this, m_recurseLevel+1,diamondList);
-	Triangle *enfant2 = new Triangle(v[2], milieu, v[1], this, m_recurseLevel+1 ,diamondList);
+    Triangle *enfant1 = new Triangle(v[1], milieu, v[0], this, m_recurseLevel+1,diamondList, m_planet);
+    Triangle *enfant2 = new Triangle(v[2], milieu, v[1], this, m_recurseLevel+1 ,diamondList, m_planet);
 
 	enfant[0] = enfant1;
 	enfant[1] = enfant2;
 
 	Triangle *tVoisin = voisin[1];
 
-	Triangle *enfantV1 = new Triangle(tVoisin->v[1], milieu, tVoisin->v[0], tVoisin, m_recurseLevel+1, diamondList);
-	Triangle *enfantV2 = new Triangle(tVoisin->v[2], milieu, tVoisin->v[1], tVoisin, m_recurseLevel+1, diamondList);
+    Triangle *enfantV1 = new Triangle(tVoisin->v[1], milieu, tVoisin->v[0], tVoisin, m_recurseLevel+1, diamondList, m_planet);
+    Triangle *enfantV2 = new Triangle(tVoisin->v[2], milieu, tVoisin->v[1], tVoisin, m_recurseLevel+1, diamondList, m_planet);
 
 	tVoisin->enfant[0] = enfantV1;
 	tVoisin->enfant[1] = enfantV2;
@@ -337,7 +340,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		Ogre::Vector3 camPos = m_cam->getPosition();
 		camPos.normalise();
 		
-		float cosHorizon = 10000.0f/m_cam->getPosition().length();
+        float cosHorizon = m_planet->getRadius() / m_cam->getPosition().length();
 
 		float val  = camPos.dotProduct(normal) - cosHorizon;
 
@@ -350,7 +353,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		milieu.z = (v[2].z + v[0].z) / 2;
 		Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
-		float distance_value = distance.length();
+        //float distance_value = distance.length();
 
 		//if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)) && distance_value > 150.0f)
 		//	return false; //Le triangle est hors champ
@@ -362,7 +365,7 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 
 		if (edge.squaredLength() < 1)  return false;
 
-		edge *= (/*std::powf(val, 2)+*/4/std::powf(val+1,2));
+        edge *= (/*std::powf(val, 2)+*/4/std::pow(val+1,2));
 		return (edge.squaredLength()/distance.squaredLength()*15) > 1;
 
 		/*Ogre::Vector2 v2 = getScreenCoordinate(Ogre::Vector3(v[2].x, v[2].y, v[2].z), m_cam), v0 = getScreenCoordinate(Ogre::Vector3(v[0].x, v[0].y, v[0].z), m_cam);

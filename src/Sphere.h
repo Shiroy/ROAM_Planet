@@ -48,6 +48,7 @@ private:
 	bool firstDraw;	
 	pthread_t m_thread;
 	PlanetNoise *m_pnoise;
+    Ogre::Camera *m_camera;
 };
 
 struct updateThreadArg

@@ -11,23 +11,23 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::S
 	m_obj = obj;
 	m_node = node;
 	m_meshUpdated = false;
-	rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //DCB (dessous)
-	rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, 1, &m_diamondList); //BAD
+    rootTriangle[0] = new Triangle(-1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 0, -1, 0, NULL, 1, &m_diamondList, this); //DCB (dessous)
+    rootTriangle[1] = new Triangle(1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, 0, -1, 0, NULL, 1, &m_diamondList, this); //BAD
 
-	rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList); //ABF (face avant)
-	rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList); //FEA
+    rootTriangle[2] = new Triangle(-1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList, this); //ABF (face avant)
+    rootTriangle[3] = new Triangle(1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 0, 0, 1, NULL, 1, &m_diamondList, this); //FEA
 
-	rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL, 1, &m_diamondList); //BCG (cote gauche)
-	rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL, 1, &m_diamondList); //GFB
+    rootTriangle[4] = new Triangle(1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1, 0, 0, NULL, 1, &m_diamondList, this); //BCG (cote gauche)
+    rootTriangle[5] = new Triangle(1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, 1, 0, 0, NULL, 1, &m_diamondList, this); //GFB
 
-	rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList); //CDH (face arriere)
-	rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList); //HGC
+    rootTriangle[6] = new Triangle(1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList, this); //CDH (face arriere)
+    rootTriangle[7] = new Triangle(-1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 0, 0, -1, NULL, 1, &m_diamondList, this); //HGC
 
-	rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL, 1, &m_diamondList); //DAE (cote droit)
-	rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL, 1, &m_diamondList); //EHD
+    rootTriangle[8] = new Triangle(-1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, 1/NORM, 1/NORM, -1, 0, 0, NULL, 1, &m_diamondList, this); //DAE (cote droit)
+    rootTriangle[9] = new Triangle(-1/NORM, 1/NORM, 1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, -1/NORM, -1/NORM, -1, 0, 0, NULL, 1, &m_diamondList, this); //EHD
 
-	rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL, 1, &m_diamondList); //EFG (haut)
-	rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL, 1, &m_diamondList); //GHE
+    rootTriangle[10] = new Triangle(-1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, 1/NORM, -1/NORM, 0, 1, 0, NULL, 1, &m_diamondList, this); //EFG (haut)
+    rootTriangle[11] = new Triangle(1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, -1/NORM, -1/NORM, 1/NORM, 1/NORM, 0, 1, 0, NULL, 1, &m_diamondList, this); //GHE
 
 	//Initialisation des voisin
 
@@ -77,15 +77,7 @@ Sphere::Sphere(float radius, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::S
 
 	rootTriangle[11]->setVoisin(0, rootTriangle[7]);
 	rootTriangle[11]->setVoisin(1, rootTriangle[10]);
-	rootTriangle[11]->setVoisin(2, rootTriangle[9]);
-
-	Triangle *t = rootTriangle[7];
-	
-	for(int i = 0 ; i < 0 ; i++)
-	{
-		t->split(m_radius, pnoise);
-		t = t->getEnfant(0);
-	}
+    rootTriangle[11]->setVoisin(2, rootTriangle[9]);
 
 	firstDraw = true;
 
