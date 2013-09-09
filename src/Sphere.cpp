@@ -102,17 +102,10 @@ void Sphere::renderIfUpdated()
 		pthread_mutex_lock(&m_mutex);
 		int nbTri = 0;
 		int recurseLevel = 1;
-		/*if(firstDraw)
-		{
-			m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-			firstDraw = false;
-		}
-		else
-			m_obj->beginUpdate(0);*/
+        m_obj->clear();
+        m_obj->begin("BasicWhite", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		render(m_obj, nbTri, recurseLevel);
-		//m_obj->end();
-
-		//std::cout << "nbTri : " << nbTri << std::endl;
+        m_obj->end();        
 		m_meshUpdated = false;
 		pthread_mutex_unlock(&m_mutex);
 	}
@@ -120,15 +113,18 @@ void Sphere::renderIfUpdated()
 
 void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 {
+    int lastIndex = 0;
 	for (int i=0 ; i<12 ; ++i) {
 		int recurse = 1;
-		if(firstDraw)
+        /*if(firstDraw)
 			obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 		else
-			obj->beginUpdate(i);
-		nbRecurse = std::max(rootTriangle[i]->render(obj, nbTri, recurse), recurse);
-		obj->end();
+            obj->beginUpdate(i);*/        
+        nbRecurse = std::max(rootTriangle[i]->render(obj, nbTri, recurse, lastIndex), recurse);
+        //obj->end();        
 	}
+
+    std::cout << "nbTri : " << nbTri << " (" << lastIndex+1 << " vertex)" << std::endl;
 
 	if(firstDraw)
 		firstDraw = false;

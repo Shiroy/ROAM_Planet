@@ -6,7 +6,6 @@ class Triangle;
 #include <list>
 #ifdef __linux__
 #include <pthread.h>
-#include <boost/timer.hpp>
 #else
 #include "pthread/include/pthread.h"
 #endif

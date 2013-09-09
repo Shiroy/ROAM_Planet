@@ -56,21 +56,18 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 	/*if(!isDiamondVisible(m_cam))
 		return true;*/
 
-	Vertex center = pTriComposed[0]->v[1];
-		Ogre::Vector3 milieu;
-		milieu.x = center.x;
-		milieu.y = center.y;
-		milieu.z = center.z;
+    Vertex *center = pTriComposed[0]->v[1];
+        Ogre::Vector3 milieu = center->getCoord();
 		Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
 		Ogre::Vector3 edge;
-		edge.x = pTriComposed[0]->v[2].x - pTriComposed[0]->v[0].x;
-		edge.y = pTriComposed[0]->v[2].y - pTriComposed[0]->v[0].y;
-		edge.z = pTriComposed[0]->v[2].z - pTriComposed[0]->v[0].z;
+        edge.x = pTriComposed[0]->v[2]->m_x - pTriComposed[0]->v[0]->m_x;
+        edge.y = pTriComposed[0]->v[2]->m_y - pTriComposed[0]->v[0]->m_y;
+        edge.z = pTriComposed[0]->v[2]->m_z - pTriComposed[0]->v[0]->m_z;
 
 
-		Ogre::Vector3 v1(pTriComposed[0]->v[0].x - pTriComposed[0]->v[1].x, pTriComposed[0]->v[0].y - pTriComposed[0]->v[1].y, pTriComposed[0]->v[0].z - pTriComposed[0]->v[1].z);
-		Ogre::Vector3 v2(pTriComposed[0]->v[0].x - pTriComposed[0]->v[2].x, pTriComposed[0]->v[0].y - pTriComposed[0]->v[2].y, pTriComposed[0]->v[0].z - pTriComposed[0]->v[2].z);
+        Ogre::Vector3 v1(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[1]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[1]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[1]->m_z);
+        Ogre::Vector3 v2(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[2]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[2]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[2]->m_z);
 		Ogre::Vector3 normal = v1.crossProduct(v2);
 		normal.normalise();
 

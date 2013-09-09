@@ -4,7 +4,31 @@
 #include <OGRE/OgreManualObject.h>
 #include <OGRE/OgreCamera.h>
 
-Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP, Sphere *plnt)
+Vertex::Vertex(float x, float y, float z) : m_x(x), m_y(y), m_z(z)
+{
+    m_index = VERTEX_NOT_DEFINED;
+}
+
+Vertex::Vertex(Ogre::Vector3 vec) : m_x(vec.x), m_y(vec.y), m_z(vec.z)
+{
+    m_index = VERTEX_NOT_DEFINED;
+}
+
+int Vertex::getIndex(int &lastIndex, Ogre::ManualObject *obj)
+{
+    if(m_index == VERTEX_NOT_DEFINED)
+    {
+        obj->position(m_x, m_y, m_z);
+        obj->colour(Ogre::ColourValue::White);
+        m_index = lastIndex;
+        //std::cout << "Vertice index : " << lastIndex << std::endl;
+        lastIndex++;
+    }
+
+    return m_index;
+}
+
+Triangle::Triangle(Vertex *v1, Vertex *v2, Vertex *v3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP, Sphere *plnt)
 {
 	v[0] = v1;
 	v[1] = v2;
@@ -22,29 +46,14 @@ Triangle::Triangle(Vertex v1, Vertex v2, Vertex v3, Triangle *p, int recurseLeve
 
 Triangle::Triangle(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float normal1, float normal2, float normal3, Triangle *p, int recurseLevel, std::vector<Diamond*> *diamondListP, Sphere *plnt)
 {
-	v[0].x = x1;
-	v[0].y = y1;
-	v[0].z = z1;
+    Vertex *v0 = new Vertex(x1, y1, z1);
+    v[0] = v0;
 
-	v[0].nx = normal1;
-	v[0].ny = normal2;
-	v[0].nz = normal3;
+    Vertex *v1 = new Vertex(x2, y2, z2);
+    v[1] = v1;
 
-	v[1].x = x2;
-	v[1].y = y2;
-	v[1].z = z2;
-
-	v[1].nx = normal1;
-	v[1].ny = normal2;
-	v[1].nz = normal3;
-
-	v[2].x = x3;
-	v[2].y = y3;
-	v[2].z = z3;
-
-	v[2].nx = normal1;
-	v[2].ny = normal2;
-	v[2].nz = normal3;
+    Vertex *v2 = new Vertex(x3, y3, z3);
+    v[2] = v2;
 
 	parent = p;
 	enfant[0] = NULL;
@@ -66,8 +75,8 @@ Triangle::~Triangle(void)
 
 void Triangle::calculateNormal()
 {
-	Ogre::Vector3 v1(v[0].x - v[1].x, v[0].y - v[1].y, v[0].z - v[1].z);
-	Ogre::Vector3 v2(v[0].x - v[2].x, v[0].y - v[2].y, v[0].z - v[2].z);
+    Ogre::Vector3 v1(v[0]->m_x - v[1]->m_x, v[0]->m_y - v[1]->m_y, v[0]->m_z - v[1]->m_z);
+    Ogre::Vector3 v2(v[0]->m_x - v[2]->m_x, v[0]->m_y - v[2]->m_y, v[0]->m_z - v[2]->m_z);
 	normal = v1.crossProduct(v2);
 	normal.normalise();
 }
@@ -97,12 +106,12 @@ Triangle* Triangle::getParent()
 	return parent;
 }
 
-int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
+int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse, int &lastIndex)
 {
-	if(enfant[0] || enfant[1])
+    if(enfant[0] || enfant[1])
 	{		
-		int r1 = enfant[0]->render(obj, nbTri, nbRecurse+1);
-		int r2 = enfant[1]->render(obj, nbTri, nbRecurse+1);
+        int r1 = enfant[0]->render(obj, nbTri, nbRecurse+1, lastIndex);
+        int r2 = enfant[1]->render(obj, nbTri, nbRecurse+1, lastIndex);
 
 		if(r1 > r2)
 			return r1;
@@ -111,18 +120,11 @@ int Triangle::render(Ogre::ManualObject *obj, int &nbTri, int nbRecurse)
 	}
 	else
 	{
-		obj->position(v[0].x, v[0].y, v[0].z);
-		obj->normal(normal);
-		obj->colour(v[0].r, v[0].g, v[0].b);
-		obj->position(v[1].x, v[1].y, v[1].z);
-		obj->normal(normal);
-		obj->colour(v[1].r, v[1].g, v[1].b);
-		obj->position(v[2].x, v[2].y, v[2].z);
-		obj->normal(normal);
-		obj->colour(v[2].r, v[2].g, v[2].b);
+        obj->triangle(v[0]->getIndex(lastIndex, obj), v[1]->getIndex(lastIndex, obj), v[2]->getIndex(lastIndex, obj));
+
 		nbTri++;
 		return nbRecurse;
-	}
+    }
 }
 
 void Triangle::split(float radius, PlanetNoise *pnoise)
@@ -131,17 +133,15 @@ void Triangle::split(float radius, PlanetNoise *pnoise)
 		return;
 
 	if(voisin[1]->getVoisin(1) != this)
-		voisin[1]->split(radius, pnoise);
+		voisin[1]->split(radius, pnoise);    
 
-	Vertex milieu;
+    float mx = (v[2]->m_x + v[0]->m_x) / 2;
+    float my = (v[2]->m_y + v[0]->m_y) / 2;
+    float mz = (v[2]->m_z + v[0]->m_z) / 2;
 
-	milieu.x = (v[2].x + v[0].x) / 2;
-	milieu.y = (v[2].y + v[0].y) / 2;
-	milieu.z = (v[2].z + v[0].z) / 2;
-
-	Ogre::Vector3 vMilieu(milieu.x, milieu.y, milieu.z);
+    Ogre::Vector3 vMilieu(mx, my, mz);
 	vMilieu.normalise();
-	float norme = radius + pnoise->noise(milieu.x, milieu.y, milieu.z);
+    float norme = radius + pnoise->noise(mx, my, mz);
 	vMilieu *= norme;
 
 	float altitude = norme - radius;
@@ -163,20 +163,14 @@ void Triangle::split(float radius, PlanetNoise *pnoise)
 		milieu.g = 0.18f;
 		milieu.b = 0.12f;
 	}
-	else*/
+    else
 	{
 		milieu.r = 1.0f;
 		milieu.g = 1.0f;
 		milieu.b = 1.0f;
-	}
+    }*/
 
-	milieu.x = vMilieu.x;
-	milieu.y = vMilieu.y;
-	milieu.z = vMilieu.z;
-
-	milieu.nx = v[0].nx;
-	milieu.ny = v[0].ny;
-	milieu.nz = v[0].nz;
+    Vertex *milieu = new Vertex(vMilieu.x, vMilieu.y, vMilieu.z);
 
     Triangle *enfant1 = new Triangle(v[1], milieu, v[0], this, m_recurseLevel+1,diamondList, m_planet);
     Triangle *enfant2 = new Triangle(v[2], milieu, v[1], this, m_recurseLevel+1 ,diamondList, m_planet);
@@ -273,6 +267,8 @@ void Triangle::merge()
 	Triangle *enfantV1 = parentVoisin->enfant[0];
 	Triangle *enfantV2 = parentVoisin->enfant[1];
 
+    delete enfant1->v[1];
+
 	for(int i = 0 ; i < 3 ; i++)
 	{
 		if(enfant1->voisin[1]->voisin[i] == enfant1)
@@ -335,8 +331,10 @@ void Triangle::merge()
 	delete enfantV2;
 }
 
-bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m_cam) {		
-		
+bool Triangle::needsSplit(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
+{
+    if(m_recurseLevel < 9)
+        return true;
 		Ogre::Vector3 camPos = m_cam->getPosition();
 		camPos.normalise();
 		
@@ -348,9 +346,9 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 			return false;
 
 		Ogre::Vector3 milieu;
-		milieu.x = (v[2].x + v[0].x) / 2;
-		milieu.y = (v[2].y + v[0].y) / 2;
-		milieu.z = (v[2].z + v[0].z) / 2;
+        milieu.x = (v[2]->m_x + v[0]->m_x) / 2;
+        milieu.y = (v[2]->m_y + v[0]->m_y) / 2;
+        milieu.z = (v[2]->m_z + v[0]->m_z) / 2;
 		Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
         //float distance_value = distance.length();
@@ -359,9 +357,9 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, bool &meshUpdated, Ogre::Camera *m
 		//	return false; //Le triangle est hors champ
 
 		Ogre::Vector3 edge;
-		edge.x = v[2].x - v[0].x;
-		edge.y = v[2].y - v[0].y;
-		edge.z = v[2].z - v[0].z;
+        edge.x = v[2]->m_x - v[0]->m_x;
+        edge.y = v[2]->m_y - v[0]->m_y;
+        edge.z = v[2]->m_z - v[0]->m_z;
 
 		if (edge.squaredLength() < 1)  return false;
 
@@ -384,6 +382,10 @@ Ogre::Vector2 Triangle::getScreenCoordinate(Ogre::Vector3 vertex, Ogre::Camera *
 
 void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam, PlanetNoise *pnoise)
 {
+    v[0]->reinitIndex();
+    v[1]->reinitIndex();
+    v[2]->reinitIndex();
+
 	if(enfant[0] || enfant[1])
 	{
 		if(enfant[0])
@@ -393,10 +395,11 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
 	}
 	else
 	{
-			meshUpdated = true;
-		if (needsSplit(dPos, meshUpdated, m_cam)) {
+            meshUpdated = false;
+        if (needsSplit(dPos, m_cam)) {
 			split(radius, pnoise);
 			splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
+            meshUpdated = true;
 		}
 	}
 }
@@ -406,13 +409,13 @@ float Triangle::error(Ogre::Vector3 dPos, Ogre::Camera *m_cam, float radius)
 	float distance = dPos.squaredDistance(Ogre::Vector3::ZERO);
 
 	Ogre::Vector3 milieu;
-	milieu.x = (v[2].x + v[0].x) / 2;
-	milieu.y = (v[2].y + v[0].y) / 2;
-	milieu.z = (v[2].z + v[0].z) / 2;
+    milieu.x = (v[2]->m_x + v[0]->m_x) / 2;
+    milieu.y = (v[2]->m_y + v[0]->m_y) / 2;
+    milieu.z = (v[2]->m_z + v[0]->m_z) / 2;
 
 	float fov = m_cam->getDirection().dotProduct((milieu - dPos).normalisedCopy());
 
-	float edge_lenght = v[2].x * v[0].x + v[2].y * v[0].y + v[2].z * v[0].z;
+    float edge_lenght = v[2]->m_x * v[0]->m_x + v[2]->m_y * v[0]->m_y + v[2]->m_z * v[0]->m_z;
 	float altitude = dPos.length() - radius;
 	if(altitude < 1.0f)
 		altitude = 1.0f;
@@ -434,7 +437,7 @@ bool Triangle::belongToADiamond(Triangle *t)
 
 bool Triangle::isVisible(Ogre::Camera *m_cam)
 {
-	if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)))
+    if(!m_cam->isVisible(Ogre::Vector3(v[0]->m_x, v[0]->m_y, v[0]->m_z)) && !m_cam->isVisible(Ogre::Vector3(v[1]->m_x, v[1]->m_y, v[1]->m_z)) && !m_cam->isVisible(Ogre::Vector3(v[2]->m_x, v[2]->m_y, v[2]->m_z)))
 		return false; //Le triangle est hors champ
 	else
 		return true;
