@@ -17,6 +17,10 @@ namespace Ogre
 	class ManualObject;
 };
 
+#ifdef NULL
+#undef NULL
+#endif
+
 #define NULL 0
 
 class Sphere
@@ -33,7 +37,7 @@ public:
 
 	static void *updateThread(void *arg);
 	Ogre::Camera *getCamera() {return m_camera;}
-	float getRadius() {return m_radius;}	
+    inline float getRadius() {return m_radius;}
 
 	bool m_meshUpdated;
 	pthread_mutex_t m_mutex;

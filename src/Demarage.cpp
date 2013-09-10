@@ -79,7 +79,7 @@ void Demarage::createCamera()
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
 	m_camera->setFarClipDistance(13000000);
-	m_camera->setPosition(Ogre::Vector3(0, 0, -20000));
+    m_camera->setPosition(Ogre::Vector3(0, 0, -2000000));
 	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
 	m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -98,7 +98,7 @@ void Demarage::createScene()
 	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
 	obj->setDynamic(true);
 	obj->estimateVertexCount(50000);
-	m_planet = new Planet(1000000, obj, m_camera, m_node);
+    m_planet = new Planet(10000000, obj, m_camera, m_node);
 	m_node->attachObject(obj);
 
 	/*m_node2 = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode2");
@@ -114,7 +114,7 @@ void Demarage::createScene()
 	light->setDiffuseColour(Ogre::ColourValue::White);
 	light->setDirection(Ogre::Vector3(0, -1, 0));
 
-	m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-500000, 0, 0));
+    m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-5000000, 0, 0));
 	m_lightNode->attachObject(light);
 
 	m_sceneMgr->setSkyBox(true, "deep_space");
@@ -152,14 +152,14 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
 
-	Ogre::Real vitesse = 15000.0f;
+    Ogre::Real vitesse = 15000.0f;
 	Ogre::Real vitesseRot = 0.005f;
 
 	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
-	Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 10000.f; // rayon
+    Ogre::Real altitude = (m_camera->getPosition() - m_node->getPosition()).length() - 1000000.f; // rayon
 	Ogre::Real atmosphericDrag = 1.f;
 	if (altitude && altitude < 10000.f)
-		atmosphericDrag = std::max(altitude / 10000.0f, 0.01f);
+        atmosphericDrag = std::max(altitude / 10000.0f, 0.01f);
 
 	Ogre::Real mouvement = vitesse * atmosphericDrag * e.timeSinceLastFrame;
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;

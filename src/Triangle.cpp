@@ -333,8 +333,8 @@ void Triangle::merge()
 
 bool Triangle::needsSplit(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 {
-    if(m_recurseLevel < 9)
-        return true;
+    /*if(m_recurseLevel < 9)
+        return true;*/
 		Ogre::Vector3 camPos = m_cam->getPosition();
 		camPos.normalise();
 		
@@ -348,29 +348,46 @@ bool Triangle::needsSplit(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 		Ogre::Vector3 milieu;
         milieu.x = (v[2]->m_x + v[0]->m_x) / 2;
         milieu.y = (v[2]->m_y + v[0]->m_y) / 2;
-        milieu.z = (v[2]->m_z + v[0]->m_z) / 2;
+        milieu.z = (v[2]->m_z + v[0]->m_z) / 2;        
 		Ogre::Vector3 distance = milieu - m_cam->getPosition();
+
+        Ogre::Vector3 edge;
+        edge.x = (v[2]->m_x - v[0]->m_x);
+        edge.y = (v[2]->m_y - v[0]->m_y);
+        edge.z = (v[2]->m_z - v[0]->m_z);
+
+        //float realAltiude = planetNoise(milieu.x, milieu.y, milieu.z);
+        float realAlitute = m_planet->getRadius();
+
+        float variance = fabs(realAlitute - milieu.length());
 
         //float distance_value = distance.length();
 
 		//if(!m_cam->isVisible(Ogre::Vector3(v[0].x, v[0].y, v[0].z)) && !m_cam->isVisible(Ogre::Vector3(v[1].x, v[1].y, v[1].z)) && !m_cam->isVisible(Ogre::Vector3(v[2].x, v[2].y, v[2].z)) && distance_value > 150.0f)
 		//	return false; //Le triangle est hors champ
 
-		Ogre::Vector3 edge;
+        /*Ogre::Vector3 edge;
         edge.x = v[2]->m_x - v[0]->m_x;
         edge.y = v[2]->m_y - v[0]->m_y;
         edge.z = v[2]->m_z - v[0]->m_z;
 
 		if (edge.squaredLength() < 1)  return false;
 
-        edge *= (/*std::powf(val, 2)+*/4/std::pow(val+1,2));
-		return (edge.squaredLength()/distance.squaredLength()*15) > 1;
+        edge *= (/*std::powf(val, 2)+4/std::pow(val+1,2));
+        return (edge.squaredLength()/distance.squaredLength()*15) > 1;*/
 
 		/*Ogre::Vector2 v2 = getScreenCoordinate(Ogre::Vector3(v[2].x, v[2].y, v[2].z), m_cam), v0 = getScreenCoordinate(Ogre::Vector3(v[0].x, v[0].y, v[0].z), m_cam);
 		
 		float sqL = (v2 - v0).length();
 		//std::cout << sqL << std::endl;
 		return sqL > 1000;*/
+        float error = variance / distance.length();
+
+        //std::cout << "Error : " << error << std::endl;
+
+        //std::cout << "Distance : " << distance.length() << " milieu :" << edge.length() << std::endl;
+
+        return ((error > 0.0001f) || (distance.length() <= edge.length()));
 }
 
 Ogre::Vector2 Triangle::getScreenCoordinate(Ogre::Vector3 vertex, Ogre::Camera *m_cam)
@@ -398,7 +415,7 @@ void Triangle::splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated
             meshUpdated = false;
         if (needsSplit(dPos, m_cam)) {
 			split(radius, pnoise);
-			splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
+            //splitIfNeeded(dPos, radius, meshUpdated, m_cam, pnoise);
             meshUpdated = true;
 		}
 	}

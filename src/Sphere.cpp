@@ -98,13 +98,15 @@ Sphere::~Sphere(void)
 void Sphere::renderIfUpdated()
 {
 	if(m_meshUpdated)
-	{
+	{        
 		pthread_mutex_lock(&m_mutex);
 		int nbTri = 0;
 		int recurseLevel = 1;
         m_obj->clear();
         m_obj->begin("BasicWhite", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+        std::cout << "Updating planet" << std::endl;
 		render(m_obj, nbTri, recurseLevel);
+        std::cout << "Done" << std::endl;
         m_obj->end();        
 		m_meshUpdated = false;
 		pthread_mutex_unlock(&m_mutex);
@@ -131,10 +133,13 @@ void Sphere::render(Ogre::ManualObject *obj, int &nbTri, int &nbRecurse)
 }
 
 bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
-{
-	bool meshUpdated = false;
+{	
 	for(int i = 0 ; i < 12 ; i++)
-		rootTriangle[i]->splitIfNeeded(dPos, m_radius, meshUpdated, m_cam, m_pnoise);
+    {
+        pthread_mutex_lock(&m_mutex);
+        rootTriangle[i]->splitIfNeeded(dPos, m_radius, m_meshUpdated, m_cam, m_pnoise);
+        pthread_mutex_unlock(&m_mutex);
+    }
 
 	//std::cout << "Diamond : " << m_diamondList.size() << " ";
 #ifdef __linux__
@@ -146,18 +151,20 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 
 	for(int i = 0 ; i != m_diamondList.size() ; ++i)
 	{
+        pthread_mutex_lock(&m_mutex);
 		Diamond *dia = m_diamondList[i];
 		if(dia->canBeMerged(m_cam))
 		{
-			//std::cout << "Merge" << std::endl;
+            //std::cout << "Merge" << std::endl;
 			dia->pTriComposed[0]->merge();
-			meshUpdated = true;
+            m_meshUpdated = true;
 		}
 		else if(dia->removed)
 		{			
 			m_diamondList.erase(m_diamondList.begin()+i);
 			i--;
 		}
+        pthread_mutex_unlock(&m_mutex);
 	}
 	#ifdef __linux__
 	newTick = clock() / (CLOCKS_PER_SEC / 1000);
@@ -167,7 +174,7 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 	//std::cout << "Extracting object done (diff : " << newTick - tick << ")" << std::endl;
 	tick = newTick;
 
-	return meshUpdated;
+    return true;
 }
 
 void *Sphere::updateThread(void *arg)
@@ -193,11 +200,8 @@ void *Sphere::updateThread(void *arg)
 		if(tickCount - lastTick < 250)
 			continue;
 
-		Ogre::Vector3 dPos = caller->m_node->getPosition() - m_cam->getPosition();
-
-		pthread_mutex_lock(&caller->m_mutex);
-		caller->m_meshUpdated = caller->updateMesh(dPos, m_cam);
-		pthread_mutex_unlock(&caller->m_mutex);
+        Ogre::Vector3 dPos = caller->m_node->getPosition() - m_cam->getPosition();
+        caller->m_meshUpdated = caller->updateMesh(dPos, m_cam);
 #ifdef __linux__
 		lastTick = clock() / (CLOCKS_PER_SEC / 1000);
 #else

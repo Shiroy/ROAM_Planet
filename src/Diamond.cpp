@@ -1,5 +1,6 @@
 #include "Diamond.h"
 #include "Triangle.h"
+#include "Sphere.h"
 #include <OGRE/OgreCamera.h>
 #include <OGRE/OgreVector2.h>
 #define NULL 0
@@ -43,7 +44,7 @@ Diamond::~Diamond(void)
 }
 
 bool Diamond::canBeMerged(Ogre::Camera *m_cam)
-{
+{    
 	if(removed)
 		return false;
 
@@ -54,37 +55,37 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
 		return false;
 
 	/*if(!isDiamondVisible(m_cam))
-		return true;*/
+        return true;*/
+    Ogre::Vector3 milieu;
+    milieu.x = (pTriComposed[0]->v[2]->m_x + pTriComposed[0]->v[0]->m_x) / 2;
+    milieu.y = (pTriComposed[0]->v[2]->m_y + pTriComposed[0]->v[0]->m_y) / 2;
+    milieu.z = (pTriComposed[0]->v[2]->m_z + pTriComposed[0]->v[0]->m_z) / 2;
+    Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
-    Vertex *center = pTriComposed[0]->v[1];
-        Ogre::Vector3 milieu = center->getCoord();
-		Ogre::Vector3 distance = milieu - m_cam->getPosition();
-
-		Ogre::Vector3 edge;
-        edge.x = pTriComposed[0]->v[2]->m_x - pTriComposed[0]->v[0]->m_x;
-        edge.y = pTriComposed[0]->v[2]->m_y - pTriComposed[0]->v[0]->m_y;
-        edge.z = pTriComposed[0]->v[2]->m_z - pTriComposed[0]->v[0]->m_z;
+    /*Ogre::Vector3 edge;
+    edge.x = pTriComposed[0]->v[2]->m_x - pTriComposed[0]->v[0]->m_x;
+    edge.y = pTriComposed[0]->v[2]->m_y - pTriComposed[0]->v[0]->m_y;
+    edge.z = pTriComposed[0]->v[2]->m_z - pTriComposed[0]->v[0]->m_z;*/
 
 
-        Ogre::Vector3 v1(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[1]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[1]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[1]->m_z);
-        Ogre::Vector3 v2(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[2]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[2]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[2]->m_z);
-		Ogre::Vector3 normal = v1.crossProduct(v2);
-		normal.normalise();
+    Ogre::Vector3 v1(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[1]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[1]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[1]->m_z);
+    Ogre::Vector3 v2(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[2]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[2]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[2]->m_z);
+    Ogre::Vector3 normal = v1.crossProduct(v2);
+    normal.normalise();
 
-		Ogre::Vector3 camPos = m_cam->getPosition();
-		camPos.normalise();
-		float val  = camPos.dotProduct(normal);
+    Ogre::Vector3 camPos = m_cam->getPosition();
+    camPos.normalise();
+    float val  = camPos.dotProduct(normal);
 
-		if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
-			return true;
-		
-        edge *= (std::pow(val, 2)+1/std::pow(val+1,2));
-		return (edge.squaredLength()/distance.squaredLength()*15) < 1;
+    if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
+        return true;
 
-	/*Ogre::Vector2 vTri2 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[2].x, pTriComposed[0]->v[2].y, pTriComposed[0]->v[2].z), m_cam), vTri0 = Triangle::getScreenCoordinate(Ogre::Vector3(pTriComposed[0]->v[0].x, pTriComposed[0]->v[0].y, pTriComposed[0]->v[0].z), m_cam);
-	return (vTri2 - vTri0).length() < 200;*/
+    float realRadius = pTriComposed[0]->getPlanet()->getRadius();
 
-	return false;
+    float variance = fabs(realRadius - milieu.length());
+    float error = variance / distance.length();
+    //std::cout << "Variance : " << error << std::endl;
+    return error < 0.000095f;
 }
 
 bool Diamond::isDiamondVisible(Ogre::Camera *m_cam)

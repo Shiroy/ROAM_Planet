@@ -69,6 +69,8 @@ public:
 
 	static Ogre::Vector2 getScreenCoordinate(Ogre::Vector3, Ogre::Camera *m_cam);
 
+    Sphere *getPlanet() {return m_planet;}
+
 private:
 
     Vertex *v[3];
@@ -79,7 +81,7 @@ private:
 	Triangle *voisin[3];
 	Triangle *enfant[2];
 
-    Sphere* m_planet;
+    Sphere *m_planet;
 
 	Diamond *diamond;
 	std::vector<Diamond*> *diamondList;
