@@ -7,7 +7,7 @@ class Triangle;
 #ifdef __linux__
 #include <pthread.h>
 #else
-#include "pthread/include/pthread.h"
+#include "../pthread/include/pthread.h"
 #endif
 #include "PlanetNoise.h"
 class Diamond;
