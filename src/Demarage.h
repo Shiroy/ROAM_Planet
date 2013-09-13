@@ -1,5 +1,4 @@
 #pragma once
-#include "Sphere.h"
 #include "Planet.h"
 #include <OGRE/OgreCamera.h>
 #include <OGRE/OgreSceneManager.h>
@@ -57,7 +56,7 @@ private:
 	OIS::Mouse *m_mouse;
 	OIS::Keyboard *m_keyboard;
 
-	Planet *m_planet, *m_planet2;
+    Planet *m_planet;
 
 	bool updateKeyPressed;
 	bool stopUpdate;

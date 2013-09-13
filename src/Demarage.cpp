@@ -1,5 +1,4 @@
 #include "Demarage.h"
-#include "Triangle.h"
 #include <OGRE/Ogre.h>
 
 Demarage::Demarage(void)
@@ -78,10 +77,7 @@ void Demarage::createCamera()
 {
 	m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
-	m_camera->setFarClipDistance(13000000);
-    m_camera->setPosition(Ogre::Vector3(0, 0, -2000000));
-	m_camera->lookAt(Ogre::Vector3(0, 0, 0));
-    m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+    m_camera->setFarClipDistance(13000000);
 }
 
 void Demarage::createViewport()
@@ -93,33 +89,7 @@ void Demarage::createViewport()
 	
 void Demarage::createScene()
 {
-	m_node = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode");
-	m_node->setPosition(0,0,0);
-	Ogre::ManualObject *obj = m_sceneMgr->createManualObject("cube");
-	obj->setDynamic(true);
-	obj->estimateVertexCount(50000);
-    m_planet = new Planet(10000000, obj, m_camera, m_node);
-	m_node->attachObject(obj);
 
-	/*m_node2 = m_sceneMgr->getRootSceneNode()->createChildSceneNode("CubeNode2");
-	m_node2->setPosition(10000000,3000000,0);
-	Ogre::ManualObject *obj2 = m_sceneMgr->createManualObject("cube2");
-	obj2->setDynamic(true);
-	obj2->estimateVertexCount(50000);
-	m_planet2 = new Planet(456456, obj2, m_camera, m_node2);
-	m_node2->attachObject(obj2);*/
-
-	Ogre::Light *light = m_sceneMgr->createLight();
-	light->setType(Ogre::Light::LT_DIRECTIONAL);
-	light->setDiffuseColour(Ogre::ColourValue::White);
-	light->setDirection(Ogre::Vector3(0, -1, 0));
-
-    m_lightNode = m_sceneMgr->getRootSceneNode()->createChildSceneNode("light", Ogre::Vector3(-5000000, 0, 0));
-	m_lightNode->attachObject(light);
-
-	m_sceneMgr->setSkyBox(true, "deep_space");
-
-	//m_node->rotate(Ogre::Vector3(0, 1, 0), Ogre::Radian(-Ogre::Math::PI/4));
 }
 
 bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
