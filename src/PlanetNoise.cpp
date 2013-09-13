@@ -3,25 +3,26 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 
 PlanetNoise::PlanetNoise(int seed)
 {
-	setSeed(seed);
+    //setSeed(seed);
 }
 
 PlanetNoise::~PlanetNoise(void)
 {
 }
 
-float PlanetNoise::noise(float x, float y, float z)
+float PlanetNoise::noise(float x, float y, float z, float planetRadius)
 {
 	#define PRE_SCALAR 100000.0f
 
-	x = (x + PRE_SCALAR)/PRE_SCALAR;
-	y = (y + PRE_SCALAR)/PRE_SCALAR;
-	z = (z + PRE_SCALAR)/PRE_SCALAR;
-	float noise, noise2 = 0;
+    /*x = (x + planetRadius)/planetRadius;
+    y = (y + planetRadius)/planetRadius;
+    z = (z + planetRadius)/planetRadius;*/
+    /*float noise, noise2 = 0;
 
 	noise = scaled_raw_noise_3d(0, 1, x, y, z, m_perm);
 	noise2 = pow(scaled_raw_noise_3d(0, 1, x*2+1034.f, y*2+837.f, z*2+103.f, m_perm),15);
@@ -29,7 +30,11 @@ float PlanetNoise::noise(float x, float y, float z)
 	//std::cout << "Noise : " << noise << std::endl;
 
 	return 0.f;
-	return -500.f + ( noise * 700.f) + noise2*5000.f;
+    return -500.f + ( noise * 700.f) + noise2*5000.f;*/
+
+    float noise = scaled_octave_noise_3d(16, 0.4f, 0.000005f, 0, 30000, x, y, z);
+    //std::cout << "Noise : " << noise << std::endl;
+    return noise;
 }
 
 void PlanetNoise::setSeed(int seed)

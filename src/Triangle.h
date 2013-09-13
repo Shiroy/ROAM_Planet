@@ -19,9 +19,9 @@ public:
     Ogre::Vector3 getCoord() {return Ogre::Vector3(m_x, m_y, m_z);}
 
     float m_x, m_y, m_z;
-
+    float r, g, b;
 private:
-    float m_r, m_g, m_b;
+
     unsigned int m_index;
 };
 
@@ -54,7 +54,7 @@ public:
 
 	void split(float radius, PlanetNoise *pnoise);
 	void splitIfNeeded(Ogre::Vector3 dPos, float radius, bool &meshUpdated, Ogre::Camera *m_cam, PlanetNoise *pnoise);
-    bool needsSplit(Ogre::Vector3 dPos, Ogre::Camera *m_cam);
+    bool needsSplit(Ogre::Vector3 dPos, Ogre::Camera *m_cam, PlanetNoise *pnoise);
 	void merge();
 
 	float ratio(Ogre::Camera *m_cam);

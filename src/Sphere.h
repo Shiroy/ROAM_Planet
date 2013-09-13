@@ -38,6 +38,7 @@ public:
 	static void *updateThread(void *arg);
 	Ogre::Camera *getCamera() {return m_camera;}
     inline float getRadius() {return m_radius;}
+    inline PlanetNoise *getNoise() { return m_pnoise; }
 
 	bool m_meshUpdated;
 	pthread_mutex_t m_mutex;

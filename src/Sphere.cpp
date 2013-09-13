@@ -171,10 +171,10 @@ bool Sphere::updateMesh(Ogre::Vector3 dPos, Ogre::Camera *m_cam)
 #else
 	newTick = GetTickCount();
 #endif
-	//std::cout << "Extracting object done (diff : " << newTick - tick << ")" << std::endl;
+    std::cout << "Extracting object done (diff : " << newTick - tick << ")" << std::endl;
 	tick = newTick;
 
-    return true;
+    return m_meshUpdated;
 }
 
 void *Sphere::updateThread(void *arg)

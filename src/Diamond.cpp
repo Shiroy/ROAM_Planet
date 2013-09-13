@@ -62,10 +62,11 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
     milieu.z = (pTriComposed[0]->v[2]->m_z + pTriComposed[0]->v[0]->m_z) / 2;
     Ogre::Vector3 distance = milieu - m_cam->getPosition();
 
-    /*Ogre::Vector3 edge;
+    Ogre::Vector3 edge;
     edge.x = pTriComposed[0]->v[2]->m_x - pTriComposed[0]->v[0]->m_x;
     edge.y = pTriComposed[0]->v[2]->m_y - pTriComposed[0]->v[0]->m_y;
-    edge.z = pTriComposed[0]->v[2]->m_z - pTriComposed[0]->v[0]->m_z;*/
+    edge.z = pTriComposed[0]->v[2]->m_z - pTriComposed[0]->v[0]->m_z;
+    if (edge.squaredLength() < 0.25)  return true;
 
 
     Ogre::Vector3 v1(pTriComposed[0]->v[0]->m_x - pTriComposed[0]->v[1]->m_x, pTriComposed[0]->v[0]->m_y - pTriComposed[0]->v[1]->m_y, pTriComposed[0]->v[0]->m_z - pTriComposed[0]->v[1]->m_z);
@@ -80,12 +81,12 @@ bool Diamond::canBeMerged(Ogre::Camera *m_cam)
     if(val <= 0) // le triangle est cache car il est sur l'autre face de la planete
         return true;
 
-    float realRadius = pTriComposed[0]->getPlanet()->getRadius();
+    float realRadius = pTriComposed[0]->getPlanet()->getRadius() + pTriComposed[0]->getPlanet()->getNoise()->noise(milieu.x, milieu.y, milieu.z, pTriComposed[0]->getPlanet()->getRadius());
 
     float variance = fabs(realRadius - milieu.length());
     float error = variance / distance.length();
     //std::cout << "Variance : " << error << std::endl;
-    return error < 0.000095f;
+    return (error < 0.0025f) && (distance.length() > 750);
 }
 
 bool Diamond::isDiamondVisible(Ogre::Camera *m_cam)
