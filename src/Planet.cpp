@@ -1,9 +1,14 @@
 #include "Planet.h"
+#include "PlanetNoise.h"
+#include "PlanetRenderer.h"
 
-
-Planet::Planet(int seed, Ogre::ManualObject *obj, Ogre::Camera *cam, Ogre::SceneNode *node) : m_seed(seed)
+Planet::Planet(float planetRadius, int seed, Ogre::SceneNode *node, Ogre::Camera *cam, Ogre::SceneManager *scnMgr) : m_seed(seed), m_radius(planetRadius)
 {
-    m_pnoise = new PlanetNoise(seed);
+    m_pnoise = new PlanetNoise(m_seed);
+    m_camera = cam;
+    m_node = node;
+    m_sceneMgr = scnMgr;
+    m_renderer = new PlanetRenderer(this);
 }
 
 

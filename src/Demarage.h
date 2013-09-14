@@ -29,11 +29,11 @@ public:
 	//virtual bool keyReleased(const OIS::KeyEvent &e);
 
 	Ogre::Camera *getCamera();
-	Ogre::SceneManager *getSceneManager();
+    Ogre::SceneManager *getSceneManager();
 	Ogre::RenderWindow *getWindow();
 	Ogre::Viewport *getViewport();
 
-	void generateFace(Ogre::Radian theta, Ogre::Radian phi, Ogre::Real r, Ogre::ManualObject *obj);
+    void generateFace(Ogre::Radian theta, Ogre::Radian phi, Ogre::Real r, Ogre::ManualObject *obj);
 
 private:
 	void createViewport();
@@ -44,12 +44,12 @@ private:
 	void startOIS();
 
 	Ogre::Root *m_root;
-	Ogre::SceneManager *m_sceneMgr;
+    Ogre::SceneManager *m_sceneMgr;
 	Ogre::RenderWindow *m_window;
 	Ogre::Camera *m_camera;
 	Ogre::Viewport *m_viewport;
 	Ogre::SceneNode *m_node, *m_node2;
-	Ogre::SceneNode * m_lightNode;
+    Ogre::SceneNode * m_lightNode;
 
 	OIS::InputManager *m_inputManager;
 
