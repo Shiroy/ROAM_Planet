@@ -21,14 +21,25 @@
  */
 
 #include <OGRE/OgreManualObject.h>
+#include <OGRE/OgrePlaneBoundedVolume.h>
 
-#define VERTEX_PER_CHUNK 64 //Vertex par coté
+#define VERTEX_PER_CHUNK 16 //Vertex par coté
+#define MIN_LENGHT 3.5f //Carré de 1 m au lvl max de LOD
+#define MAX_DEPTH_ALTITUDE 100.0f
+#define MIN_DEPTH_ALTITUDE 125.0f
+
+class Planet;
 
 class PlanetChunk
 {
 public:
-    PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRightCorner, Ogre::Vector3 topRightCorner, Ogre::Vector3 topLefCorner, float radius, Ogre::SceneNode *node, Ogre::SceneManager *scnMgr);
+    PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRightCorner, Ogre::Vector3 topRightCorner, Ogre::Vector3 topLefCorner, float radius, Ogre::SceneNode *node, Ogre::SceneManager *scnMgr, Ogre::Camera *cam, float error, Planet *planet, int currentDepth = 0);
+    ~PlanetChunk();
 
+    void update();
+
+    inline bool needSplit();
+    inline bool needMerge();
 private:
 
     Ogre::Vector3 m_blC;
@@ -36,11 +47,25 @@ private:
     Ogre::Vector3 m_trC;
     Ogre::Vector3 m_tlC;
 
+    Ogre::Vector3 centralPointExact; //Remove this hack
+
     float m_radius;
     Ogre::SceneNode *m_node;
     Ogre::SceneManager *m_sceneManager;
+    Ogre::Camera *m_camera;
+    Planet *m_planet;
+    Ogre::Plane *m_plane; //Plan representant approximativement la surface de la section de planète
+    Ogre::PlaneBoundedVolume m_boundedVolume;
+
+    float m_edgeLenght;
 
     PlanetChunk *m_childs[4];
     Ogre::ManualObject *m_obj; //Représente l'object affichable par ogre
+
+    float m_error;
+    Ogre::Vector3 m_centralPoint;
+
+    int m_maxDepth;
+    int m_currentDepth;
 };
 

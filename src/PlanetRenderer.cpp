@@ -4,6 +4,7 @@
 
 #define SQRT_3 1.732050808 //Racine carrée de trois
 #define NORM SQRT_3 * m_radius
+#define BASE_ERROR m_radius * 3.141526 * 2
 
 PlanetRenderer::PlanetRenderer(Planet *plnt)
 {
@@ -15,10 +16,24 @@ PlanetRenderer::PlanetRenderer(Planet *plnt)
     m_sceneManager = plnt->getSceneManager();
 
     //Initialization des 6 quadtrees
-    m_quadtrees[0] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), m_radius, m_node, m_sceneManager);
-    m_quadtrees[1] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), m_radius, m_node, m_sceneManager);
-    m_quadtrees[2] = new PlanetChunk(Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), m_radius, m_node, m_sceneManager);
-    m_quadtrees[3] = new PlanetChunk(Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), m_radius, m_node, m_sceneManager);
-    m_quadtrees[4] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), m_radius, m_node, m_sceneManager);
-    m_quadtrees[5] = new PlanetChunk(Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), m_radius, m_node, m_sceneManager);
+    m_quadtrees[0] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+    m_quadtrees[1] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+    m_quadtrees[2] = new PlanetChunk(Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+    m_quadtrees[3] = new PlanetChunk(Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+    m_quadtrees[4] = new PlanetChunk(Ogre::Vector3(-1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, -1/NORM, -1/NORM), Ogre::Vector3(1/NORM, -1/NORM, 1/NORM), Ogre::Vector3(-1/NORM, -1/NORM, 1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+    m_quadtrees[5] = new PlanetChunk(Ogre::Vector3(-1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, 1/NORM), Ogre::Vector3(1/NORM, 1/NORM, -1/NORM), Ogre::Vector3(-1/NORM, 1/NORM, -1/NORM), m_radius, m_node->createChildSceneNode(), m_sceneManager, m_camera, BASE_ERROR, plnt);
+}
+
+PlanetRenderer::~PlanetRenderer()
+{
+    for(int i = 0 ; i < 6 ; i++)
+        delete m_quadtrees[i];
+}
+
+void PlanetRenderer::update()
+{
+    for(int i = 0 ; i < 6 ; i++)
+    {
+        m_quadtrees[i]->update();
+    }
 }

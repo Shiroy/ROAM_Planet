@@ -15,10 +15,18 @@ Planet::Planet(float planetRadius, int seed, Ogre::SceneNode *node, Ogre::Camera
 Planet::~Planet(void)
 {
 	delete m_pnoise;
+    delete m_renderer;
 }
 
 void Planet::setSeed(int seed)
 {
 	m_pnoise->setSeed(seed);
 	m_seed = seed;
+}
+
+void Planet::update()
+{
+    //Add here all necessaries update which are differents from graphics
+
+    m_renderer->update();
 }

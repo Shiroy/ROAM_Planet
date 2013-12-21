@@ -12,6 +12,9 @@ class PlanetRenderer
 {
 public:
     PlanetRenderer(Planet *plnt);
+    ~PlanetRenderer();
+
+    void update();
 
 private:
     PlanetChunk *m_quadtrees[6];

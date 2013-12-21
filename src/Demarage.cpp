@@ -78,8 +78,8 @@ void Demarage::createCamera()
     m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
     m_camera->setFarClipDistance(13000000);
-    m_camera->setPosition(Ogre::Vector3(-2000, 0, 0));
-    //m_camera->lookAt(Ogre::Vector3::ZERO);
+    m_camera->setPosition(Ogre::Vector3(-4200000, 0, 0));
+    m_camera->lookAt(Ogre::Vector3::ZERO);
     m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
 
@@ -92,8 +92,9 @@ void Demarage::createViewport()
 	
 void Demarage::createScene()
 {
+    m_sceneMgr->setAmbientLight(Ogre::ColourValue());
     Ogre::SceneNode *node = m_sceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3::ZERO);
-    m_planet = new Planet(1000, 0, node, m_camera, m_sceneMgr);
+    m_planet = new Planet(4000000.0f , 0, node, m_camera, m_sceneMgr);
 }
 
 bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
@@ -103,6 +104,8 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 
 	m_keyboard->capture();
 	m_mouse->capture();
+    if(!stopUpdate)
+        m_planet->update();
 #ifdef __linux__
 	currenttick = clock() / (CLOCKS_PER_SEC / 1000);
 #else
@@ -116,9 +119,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	
 	if(!stopUpdate && (currenttick - lastUpdateTick) > 500)
 	{
-		lastUpdateTick = currenttick;
-        //m_planet->renderIfUpdated();
-		//m_planet2->renderIfUpdated();
+		lastUpdateTick = currenttick;        
 	}
 
 	//std::cout << "Distance : " <<(m_camera->getPosition() - m_node->getPosition()).length() << " (update : " << (stopUpdate == true ? "off" : "on") << ")" << std::endl;
@@ -126,7 +127,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if(m_keyboard->isKeyDown(OIS::KC_ESCAPE))
 		return false;
 
-    Ogre::Real vitesse = 150.0f;
+    Ogre::Real vitesse = 10.0f;
 	Ogre::Real vitesseRot = 0.005f;
 
 	/* Permet de ralentir la camera quand on est proche de la surface -- HARDFIX */
@@ -135,8 +136,21 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	if (altitude && altitude < 10000.f)
         atmosphericDrag = std::max(altitude / 10000.0f, 0.01f);*/
 
+    if(m_keyboard->isKeyDown(OIS::KC_F1))
+        vitesse = 100.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F2))
+        vitesse = 200.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F3))
+        vitesse = 400.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F4))
+        vitesse = 800.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F5))
+        vitesse = 1600.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F6))
+        vitesse = 16000.0f;
+
     Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;
-	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
+    Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 
 	if(m_keyboard->isKeyDown(OIS::KC_W))
 		deplacement.z -= mouvement;
@@ -156,7 +170,7 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 		}
 	}
 	else
-		updateKeyPressed = false;
+        updateKeyPressed = false;
 
 	//Screenshot
 	if(m_keyboard->isKeyDown(OIS::KC_F12))

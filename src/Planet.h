@@ -13,7 +13,7 @@ public:
     Planet(float planetRadius, int seed, Ogre::SceneNode *node, Ogre::Camera *cam, Ogre::SceneManager *scnMgr);
 	~Planet(void);
 
-    void renderIfUpdated() { }
+    void update();
 
 	void setSeed(int seed);
 
@@ -22,6 +22,7 @@ public:
     inline Ogre::SceneNode *getNode() { return m_node; }
     inline Ogre::Camera *getCamera() { return m_camera; }
     Ogre::SceneManager *getSceneManager() { return m_sceneMgr; }
+    PlanetNoise *noise() {return m_pnoise;}
 
 private:
 

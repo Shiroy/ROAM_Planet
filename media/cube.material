@@ -4,8 +4,8 @@ material cube
     {
         pass
         {
-            ambient vertexcolour
-            diffuse vertexcolour 0.5
+            ambient 1.0f 1.0f 1.0f 1.0f
+            diffuse 1.0f 1.0f 1.0f 1.0f
         }
     }
 }
