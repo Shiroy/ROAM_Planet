@@ -28,8 +28,8 @@ PlanetChunk::PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRig
     centralPointExact *= (radius+cnoise);
     m_edgeLenght = (m_blC - m_trC).length();
 
-    Ogre::Vector3 vecH = ((m_brC - m_blC) / VERTEX_PER_CHUNK);
-    Ogre::Vector3 vecV = ((m_tlC - m_blC) / VERTEX_PER_CHUNK);
+    Ogre::Vector3 vecV = ((m_blC - m_tlC) / (VERTEX_PER_CHUNK-1));
+    Ogre::Vector3 vecH = ((m_trC - m_tlC) / (VERTEX_PER_CHUNK-1));
 
     for(int i = 0 ; i < 4 ; i++)
         m_childs[i] = 0;
@@ -38,26 +38,59 @@ PlanetChunk::PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRig
 
     m_obj->begin("cube", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
-    for(int i = 0 ; i <= VERTEX_PER_CHUNK ; i++)
-    {
-        for(int j = 0 ; j <= VERTEX_PER_CHUNK ; j++)
-        {
-            Ogre::Vector3 vPos = m_blC + (j * vecH) + (i * vecV);
-            vPos.normalise();
-            float noise = planet->noise()->noise(vPos.x, vPos.y, vPos.z, radius);
-            vPos *= (radius+noise);
-            m_obj->position(vPos);            
-        }
-    }
-
-    //std::cout << "Error : " << m_error << std::endl;
+    Ogre::Vector3 vertexList[VERTEX_PER_CHUNK][VERTEX_PER_CHUNK];
 
     for(int i = 0 ; i < VERTEX_PER_CHUNK ; i++)
     {
         for(int j = 0 ; j < VERTEX_PER_CHUNK ; j++)
         {
-            m_obj->triangle((i+1)*(VERTEX_PER_CHUNK+1) + j, i*(VERTEX_PER_CHUNK+1) + j, i*(VERTEX_PER_CHUNK+1) + j + 1);
-            m_obj->triangle(i*(VERTEX_PER_CHUNK+1) + j + 1, (i+1)*(VERTEX_PER_CHUNK+1) + j + 1, (i+1)*(VERTEX_PER_CHUNK+1) + j);
+            Ogre::Vector3 vPos = m_tlC + (j * vecH) + (i * vecV);
+            vPos.normalise();
+            float noise = planet->noise()->noise(vPos.x, vPos.y, vPos.z, radius);
+            vPos *= (radius+noise);
+            vertexList[i][j] = vPos;
+            //m_obj->position(vPos);
+        }
+    }
+
+    //Calcul des normal
+
+    for(int i = 0 ; i < VERTEX_PER_CHUNK ; i++)
+    {
+        for(int j = 0 ; j < VERTEX_PER_CHUNK ; j++)
+        {
+            Ogre::Vector3 p1, p2, p3;
+            p1 = vertexList[i][j];
+            p2 = vertexList[i][j+1];
+            p3 = vertexList[i+1][j];
+
+            Ogre::Vector3 v1 = p3 - p1;
+            Ogre::Vector3 v2 = p2 - p1;
+            Ogre::Vector3 normal = v1.crossProduct(v2);
+            normal.normalise();
+            m_obj->position(p1);
+            m_obj->normal(normal);
+        }
+    }
+
+    //std::cout << "Error : " << m_error << std::endl;
+
+    for(int i = 0 ; i < VERTEX_PER_CHUNK-1 ; i++)
+    {
+        for(int j = 0 ; j < VERTEX_PER_CHUNK-1 ; j++)
+        {
+            //m_obj->triangle((i+1)*(VERTEX_PER_CHUNK) + j, i*(VERTEX_PER_CHUNK) + j, i*(VERTEX_PER_CHUNK) + j + 1);
+            //m_obj->triangle(i*(VERTEX_PER_CHUNK) + j + 1, (i+1)*(VERTEX_PER_CHUNK) + j + 1, (i+1)*(VERTEX_PER_CHUNK) + j);
+            //m_obj->triangle(i*VERTEX_PER_CHUNK+j, i*VERTEX_PER_CHUNK+j+1, (i+1)*VERTEX_PER_CHUNK+j);
+            //m_obj->triangle(i*VERTEX_PER_CHUNK*j+1, (i+1)*VERTEX_PER_CHUNK+j+1, (i+1)*VERTEX_PER_CHUNK+j);
+
+            m_obj->index((i+1)*VERTEX_PER_CHUNK+j);
+            m_obj->index((i+1)*VERTEX_PER_CHUNK+(j+1));
+            m_obj->index(i*VERTEX_PER_CHUNK+(j+1));
+
+            m_obj->index(i*VERTEX_PER_CHUNK+(j+1));
+            m_obj->index(i*VERTEX_PER_CHUNK+j);
+            m_obj->index((i+1)*VERTEX_PER_CHUNK+(j));
         }
     }
 

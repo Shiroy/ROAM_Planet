@@ -77,10 +77,10 @@ void Demarage::createCamera()
 {
     m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
-    m_camera->setFarClipDistance(13000000);
+    m_camera->setFarClipDistance(420000);
     m_camera->setPosition(Ogre::Vector3(-4200000, 0, 0));
     m_camera->lookAt(Ogre::Vector3::ZERO);
-    m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+    //m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
 
 void Demarage::createViewport()
@@ -92,7 +92,13 @@ void Demarage::createViewport()
 	
 void Demarage::createScene()
 {
-    m_sceneMgr->setAmbientLight(Ogre::ColourValue());
+    Ogre::Light *light = m_sceneMgr->createLight("dirLight");
+    light->setType(Ogre::Light::LT_DIRECTIONAL);
+    light->setDirection(Ogre::Vector3::UNIT_Z);
+    light->setDiffuseColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+    light->setSpecularColour(Ogre::ColourValue(0.5, 0.5, 0.5));
+    //m_sceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(light);
+    m_sceneMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     Ogre::SceneNode *node = m_sceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3::ZERO);
     m_planet = new Planet(4000000.0f , 0, node, m_camera, m_sceneMgr);
 }
