@@ -54,6 +54,9 @@ PlanetChunk::PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRig
     }
 
     //Calcul des normal
+#define DELTA_NORMAL 10.0f
+
+    //Ogre::Real resolution = (vertexList[0][0] - vertexList[0][1]).length();
 
     for(int i = 0 ; i < VERTEX_PER_CHUNK ; i++)
     {
@@ -61,12 +64,24 @@ PlanetChunk::PlanetChunk(Ogre::Vector3 bottomLeftCorner, Ogre::Vector3 bottomRig
         {
             Ogre::Vector3 p1, p2, p3;
             p1 = vertexList[i][j];
-            p2 = vertexList[i][j+1];
-            p3 = vertexList[i+1][j];
 
-            Ogre::Vector3 v1 = p3 - p1;
-            Ogre::Vector3 v2 = p2 - p1;
-            Ogre::Vector3 normal = v1.crossProduct(v2);
+            p2 = p1+vecH;
+            p2.normalise();
+            float noise = planet->noise()->noise(p2.x, p2.y, p2.z, radius);
+            p2 *= (radius+noise);
+
+
+            p3 = p1 + vecV;
+            p3.normalise();
+            noise = planet->noise()->noise(p3.x, p3.y, p3.z, radius);
+            p3 *= (radius+noise);
+
+            Ogre::Vector3 v1 = p2 - p1;
+            Ogre::Vector3 v2 = p3 - p1;
+
+            Ogre::Vector3 normal = -v1.crossProduct(v2);
+            if(normal.isZeroLength())
+                std::cout << "Pas de normal" << std::endl;
             normal.normalise();
             m_obj->position(p1);
             m_obj->normal(normal);
@@ -133,7 +148,7 @@ void PlanetChunk::update()
         {
             if(needSplit())
             {
-                std::cout << "Create childs" << std::endl;
+                //std::cout << "Create childs" << std::endl;
 
                 Ogre::Vector3 middleTop = (m_tlC + m_trC) / 2;
                 Ogre::Vector3 middleBottom = (m_blC + m_brC) / 2;

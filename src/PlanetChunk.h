@@ -23,7 +23,7 @@
 #include <OGRE/OgreManualObject.h>
 #include <OGRE/OgrePlaneBoundedVolume.h>
 
-#define VERTEX_PER_CHUNK 16 //Vertex par coté
+#define VERTEX_PER_CHUNK 32 //Vertex par coté
 #define MIN_LENGHT 3.5f //Carré de 1 m au lvl max de LOD
 #define MAX_DEPTH_ALTITUDE 100.0f
 #define MIN_DEPTH_ALTITUDE 125.0f

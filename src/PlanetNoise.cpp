@@ -32,7 +32,7 @@ float PlanetNoise::noise(float x, float y, float z, float planetRadius)
 	return 0.f;
     return -500.f + ( noise * 700.f) + noise2*5000.f;*/
 
-    float noise = scaled_octave_noise_3d(8, 0.4f, 3.0f, -30000.0f, 40000.0f, x*PRE_SCALAR, y*PRE_SCALAR, z*PRE_SCALAR);
+    float noise = scaled_octave_noise_3d(22, 0.4f, 3.0f, -30000.0f, 40000.0f, x*PRE_SCALAR, y*PRE_SCALAR, z*PRE_SCALAR);
     //std::cout << "Noise : " << noise << std::endl;
     return noise;
 }

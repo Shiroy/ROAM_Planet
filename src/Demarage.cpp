@@ -77,8 +77,8 @@ void Demarage::createCamera()
 {
     m_camera = m_sceneMgr->createCamera("DefaultCamera");
 	m_camera->setNearClipDistance(1);
-    m_camera->setFarClipDistance(420000);
-    m_camera->setPosition(Ogre::Vector3(-4200000, 0, 0));
+    m_camera->setFarClipDistance(420000000);
+    m_camera->setPosition(Ogre::Vector3(-42000000, 0, 0));
     m_camera->lookAt(Ogre::Vector3::ZERO);
     //m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
 }
@@ -94,7 +94,7 @@ void Demarage::createScene()
 {
     Ogre::Light *light = m_sceneMgr->createLight("dirLight");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
-    light->setDirection(Ogre::Vector3::UNIT_Z);
+    light->setDirection(Ogre::Vector3::UNIT_Y);
     light->setDiffuseColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     light->setSpecularColour(Ogre::ColourValue(0.5, 0.5, 0.5));
     //m_sceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(light);
@@ -154,6 +154,8 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
         vitesse = 1600.0f;
     if(m_keyboard->isKeyDown(OIS::KC_F6))
         vitesse = 16000.0f;
+    if(m_keyboard->isKeyDown(OIS::KC_F7))
+        vitesse = 1600000.0f;
 
     Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;
     Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
