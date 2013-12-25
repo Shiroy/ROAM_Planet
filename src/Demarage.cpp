@@ -94,10 +94,10 @@ void Demarage::createScene()
 {
     Ogre::Light *light = m_sceneMgr->createLight("dirLight");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
-    light->setDirection(Ogre::Vector3::UNIT_Y);
+    light->setDirection(Ogre::Vector3::UNIT_Z);
     light->setDiffuseColour(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     light->setSpecularColour(Ogre::ColourValue(0.5, 0.5, 0.5));
-    //m_sceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(light);
+    m_sceneMgr->setSkyBox(true, "deep_space");
     m_sceneMgr->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
     Ogre::SceneNode *node = m_sceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3::ZERO);
     m_planet = new Planet(4000000.0f , 0, node, m_camera, m_sceneMgr);
