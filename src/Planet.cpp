@@ -20,8 +20,8 @@ Planet::~Planet(void)
 
 void Planet::setSeed(int seed)
 {
-	m_pnoise->setSeed(seed);
-	m_seed = seed;
+    //m_pnoise->setSeed(seed);
+    m_seed = seed;
 }
 
 void Planet::update()

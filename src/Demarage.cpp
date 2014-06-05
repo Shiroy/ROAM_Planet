@@ -160,11 +160,11 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
     Ogre::Real mouvement = vitesse * e.timeSinceLastFrame;
     Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 
-	if(m_keyboard->isKeyDown(OIS::KC_W))
+    if(m_keyboard->isKeyDown(OIS::KC_Z))
 		deplacement.z -= mouvement;
 	if(m_keyboard->isKeyDown(OIS::KC_S))
 		deplacement.z += mouvement;
-	if(m_keyboard->isKeyDown(OIS::KC_A))
+    if(m_keyboard->isKeyDown(OIS::KC_Q))
 		deplacement.x -= mouvement;
 	if(m_keyboard->isKeyDown(OIS::KC_D))
 		deplacement.x += mouvement;
@@ -179,6 +179,12 @@ bool Demarage::frameRenderingQueued(const Ogre::FrameEvent &e)
 	}
 	else
         updateKeyPressed = false;
+
+    if(m_keyboard->isKeyDown(OIS::KC_W))
+        m_camera->setPolygonMode(Ogre::PM_WIREFRAME);
+    else if(m_keyboard->isKeyDown(OIS::KC_X))
+        m_camera->setPolygonMode(Ogre::PM_SOLID);
+
 
 	//Screenshot
 	if(m_keyboard->isKeyDown(OIS::KC_F12))

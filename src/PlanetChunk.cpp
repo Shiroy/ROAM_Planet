@@ -189,7 +189,7 @@ void PlanetChunk::update()
 
 bool PlanetChunk::needSplit()
 {
-    float distance = (centralPointExact - m_camera->getPosition()).length();
+    float distance = m_obj->getBoundingBox().distance(m_camera->getPosition());
 
     int neededLevel = m_maxDepth;
     while(neededLevel > 0)

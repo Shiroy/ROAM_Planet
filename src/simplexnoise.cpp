@@ -86,7 +86,7 @@ float octave_noise_3d( const float octaves, const float persistence, const float
     float maxAmplitude = 0;
 
     for( int i=0; i < octaves; i++ ) {
-        total += raw_noise_3d( x * frequency, y * frequency, z * frequency ) * amplitude;
+        total += fabs(raw_noise_3d( x * frequency, y * frequency, z * frequency ) * amplitude);
 
         frequency *= 2;
         maxAmplitude += amplitude;
